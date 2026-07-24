@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Weather | World Weather Hub</title>
+    <meta name="description" content="Learn how weather works, understand weather forecasts, AQI, and get safety tips. Your complete guide to meteorology basics at World Weather Hub.">
+    <link rel="canonical" href="https://yourwebsite.com/about.html" />
+    
+    <!-- FontAwesome & Styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- IMPORTANT: href के आगे / लगाया है -->
+    <link rel="stylesheet" href="/style.css">
+    
+    <!-- FAQ Structured Data for SEO (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {"@type": "Question", "name": "What is the difference between weather and climate?", "acceptedAnswer": {"@type": "Answer", "text": "Weather describes short-term conditions of the atmosphere, while climate is the average of weather patterns over a long period."}},
+        {"@type": "Question", "name": "How accurate are weather forecasts?", "acceptedAnswer": {"@type": "Answer", "text": "Modern forecasts are highly accurate for the first 3-5 days, but accuracy gradually decreases beyond 10 days."}},
+        {"@type": "Question", "name": "What does rain probability mean?", "acceptedAnswer": {"@type": "Answer", "text": "It indicates the likelihood of measurable precipitation occurring within a specific area and timeframe."}},
+        {"@type": "Question", "name": "What does humidity mean in weather?", "acceptedAnswer": {"@type": "Answer", "text": "Humidity is the amount of water vapor in the air. High humidity limits sweat evaporation, making it feel hotter."}},
+        {"@type": "Question", "name": "What is the UV Index?", "acceptedAnswer": {"@type": "Answer", "text": "A scale measuring the strength of sunburn-producing ultraviolet radiation at a particular place and time."}},
+        {"@type": "Question", "name": "What does AQI mean?", "acceptedAnswer": {"@type": "Answer", "text": "Air Quality Index (AQI) measures how clean or polluted the air is, and what associated health effects might be a concern."}},
+        {"@type": "Question", "name": "How is wind speed measured?", "acceptedAnswer": {"@type": "Answer", "text": "Wind speed is traditionally measured using an instrument called an anemometer."}},
+        {"@type": "Question", "name": "Why does the weather forecast change?", "acceptedAnswer": {"@type": "Answer", "text": "The atmosphere is chaotic. As new, more accurate data is collected by satellites and stations, models update their predictions."}},
+        {"@type": "Question", "name": "What is feels-like temperature?", "acceptedAnswer": {"@type": "Answer", "text": "It calculates how hot or cold it actually feels to the human body when humidity and wind chill are factored in with the air temperature."}},
+        {"@type": "Question", "name": "How do weather satellites help with forecasting?", "acceptedAnswer": {"@type": "Answer", "text": "They track cloud formations, storm systems, temperature patterns, and atmospheric moisture from space in real-time."}}
+      ]
+    }
+    </script>
+</head>
+<body>
+    <div class="main-container wider-container" style="max-width: 900px !important;">
+        
+        <!-- Header -->
+        <header class="compact-header">
+            <div class="header-left">
+                <button class="icon-btn"><i class="fa-solid fa-bars"></i></button>
+                <div class="brand-logo">
+                    <img src="https://img.icons8.com/color/48/globe.png" alt="logo" class="globe-img">
+                    <span class="brand-text">World Weather Hub</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <a href="/" class="icon-btn" aria-label="Home"><i class="fa-solid fa-house"></i></a>
+            </div>
+        </header>
+
+        <!-- Top Navigation -->
+        <div class="nav-tabs-container scrollable-tabs">
+            <a href="/" class="tab-btn">Today</a>
+            <a href="/forecast.html" class="tab-btn">16 Days</a>
+            <a href="/aqi.html" class="tab-btn">AQI</a>
+            <a href="/history.html" class="tab-btn">History</a>
+            <a href="/about.html" class="tab-btn active">About</a>
+        </div>
+
+        <div id="aboutContentWrapper">
+            
+            <!-- HERO SECTION -->
+            <div class="about-hero-section premium-card">
+                <div class="breadcrumb">
+                    <a href="/">Home</a> <span>/</span> <b>About Weather</b>
+                </div>
+                <div class="hero-content-flex">
+                    <i class="fa-solid fa-cloud-sun hero-icon text-warning"></i>
+                    <div>
+                        <h1>Understand the Weather Around You</h1>
+                        <p class="hero-subtitle">Learn how weather works, how forecasts are created, and how to understand the data behind every forecast.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 1: WEATHER BASICS -->
+            <section class="about-section">
+                <h2>1. What Is Weather?</h2>
+                <p class="section-desc">Weather means the condition of the atmosphere at a particular place and time. It can change from hour to hour and day to day.</p>
+                
+                <div class="comparison-grid">
+                    <div class="compare-card">
+                        <div class="c-header"><i class="fa-solid fa-cloud text-primary"></i> <b>WEATHER</b></div>
+                        <p>Short-term atmospheric conditions.</p>
+                    </div>
+                    <div class="compare-card">
+                        <div class="c-header"><i class="fa-solid fa-earth-americas text-success"></i> <b>CLIMATE</b></div>
+                        <p>Long-term average weather patterns over many years.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: WEATHER DATA EXPLAINED -->
+            <section class="about-section">
+                <h2>2. Weather Data Explained</h2>
+                <div class="metrics-grid">
+                    <div class="metric-info-card">
+                        <i class="fa-solid fa-temperature-half text-danger"></i>
+                        <h3>Temperature</h3>
+                        <p>The measure of how hot or cold the air is, typically shown in Celsius (°C) or Fahrenheit (°F).</p>
+                    </div>
+                    <div class="metric-info-card">
+                        <i class="fa-solid fa-person-rays text-warning"></i>
+                        <h3>Feels Like</h3>
+                        <p>How the temperature actually feels to your body when humidity and wind speed are factored in.</p>
+                    </div>
+                    <div class="metric-info-card">
+                        <i class="fa-solid fa-droplet text-info"></i>
+                        <h3>Humidity</h3>
+                        <p>The amount of water vapor in the air. High humidity can make heat feel much more uncomfortable.</p>
+                    </div>
+                    <div class="metric-info-card">
+                        <i class="fa-solid fa-cloud-showers-heavy text-primary"></i>
+                        <h3>Rain Probability</h3>
+                        <p>The percentage chance of measurable precipitation occurring during the forecasted time period.</p>
+                    </div>
+                    <div class="metric-info-card">
+                        <i class="fa-solid fa-wind text-secondary"></i>
+                        <h3>Wind Speed</h3>
+                        <p>Measured in km/h or mph, it shows how fast the air is moving. Strong winds can impact safety.</p>
+                    </div>
+                    <div class="metric-info-card">
+                        <i class="fa-solid fa-compass text-dark"></i>
+                        <h3>Wind Direction</h3>
+                        <p>The direction the wind is blowing from (e.g., North, East, South, West).</p>
+                    </div>
+                    <div class="metric-info-card">
+                        <i class="fa-solid fa-gauge-high text-primary"></i>
+                        <h3>Air Pressure</h3>
+                        <p>The weight of the atmosphere. Falling pressure usually indicates an approaching storm.</p>
+                    </div>
+                    <div class="metric-info-card">
+                        <i class="fa-solid fa-cloud text-secondary"></i>
+                        <h3>Cloud Cover</h3>
+                        <p>The percentage of the sky that is covered by clouds at any given time.</p>
+                    </div>
+                    <div class="metric-info-card">
+                        <i class="fa-solid fa-eye text-success"></i>
+                        <h3>Visibility</h3>
+                        <p>How far you can see clearly. Fog, dust, and heavy rain can severely reduce visibility.</p>
+                    </div>
+                    <div class="metric-info-card">
+                        <i class="fa-solid fa-sun text-warning"></i>
+                        <h3>UV Index</h3>
+                        <p>A measure of ultraviolet radiation strength. Higher values mean faster skin damage.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: HOW FORECASTS WORK -->
+            <section class="about-section">
+                <h2>3. How Weather Forecasts Work</h2>
+                <p class="section-desc">Modern forecasts combine observations, mathematical models, and supercomputers.</p>
+                <div class="timeline-container">
+                    <div class="timeline-step">
+                        <div class="t-icon"><i class="fa-solid fa-tower-cell"></i></div>
+                        <div class="t-content"><b>1. Weather Stations</b><p>Collect ground data.</p></div>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="t-icon"><i class="fa-solid fa-satellite"></i></div>
+                        <div class="t-content"><b>2. Satellites</b><p>Monitor clouds from space.</p></div>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="t-icon"><i class="fa-solid fa-satellite-dish"></i></div>
+                        <div class="t-content"><b>3. Weather Radar</b><p>Detect precipitation size & speed.</p></div>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="t-icon"><i class="fa-solid fa-laptop-code"></i></div>
+                        <div class="t-content"><b>4. Prediction Models</b><p>Supercomputers run math formulas.</p></div>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="t-icon"><i class="fa-solid fa-chart-line"></i></div>
+                        <div class="t-content"><b>5. Data Processing</b><p>Meteorologists interpret the data.</p></div>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="t-icon"><i class="fa-solid fa-mobile-screen"></i></div>
+                        <div class="t-content"><b>6. Forecast Generation</b><p>Delivered to your device.</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 4: SAMPLE FORECAST -->
+            <section class="about-section">
+                <h2>4. Understanding a Forecast (Example)</h2>
+                <div class="sample-forecast-card premium-card">
+                    <div class="s-header"><i class="fa-solid fa-circle-exclamation text-warning"></i> This is sample data, not a live forecast.</div>
+                    <ul class="sample-list">
+                        <li><b>Temperature: 32°C</b> <span>(The actual air temperature)</span></li>
+                        <li><b>Feels Like: 35°C</b> <span>(It feels hotter due to humidity)</span></li>
+                        <li><b>Rain Probability: 70%</b> <span>(High chance of rain today)</span></li>
+                        <li><b>Humidity: 78%</b> <span>(The air holds a lot of moisture)</span></li>
+                        <li><b>Wind: 18 km/h</b> <span>(Moderate breeze)</span></li>
+                        <li><b>UV Index: 7</b> <span>(High risk of sunburn, use protection)</span></li>
+                        <li><b>AQI: 92</b> <span>(Air quality is acceptable/moderate)</span></li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- SECTION 5: SYMBOLS GUIDE -->
+            <section class="about-section">
+                <h2>5. Weather Symbols Guide</h2>
+                <div class="symbols-grid">
+                    <div class="sym-item"><i class="fa-solid fa-sun text-warning"></i><div><b>Sunny</b><p>Clear skies</p></div></div>
+                    <div class="sym-item"><i class="fa-solid fa-cloud-sun text-warning"></i><div><b>Partly Cloudy</b><p>Sun and clouds mix</p></div></div>
+                    <div class="sym-item"><i class="fa-solid fa-cloud text-secondary"></i><div><b>Cloudy</b><p>Overcast skies</p></div></div>
+                    <div class="sym-item"><i class="fa-solid fa-cloud-rain text-primary"></i><div><b>Light Rain</b><p>Drizzle or showers</p></div></div>
+                    <div class="sym-item"><i class="fa-solid fa-cloud-showers-heavy text-primary"></i><div><b>Heavy Rain</b><p>Intense downpour</p></div></div>
+                    <div class="sym-item"><i class="fa-solid fa-cloud-bolt text-danger"></i><div><b>Thunderstorm</b><p>Lightning and thunder</p></div></div>
+                    <div class="sym-item"><i class="fa-solid fa-smog text-secondary"></i><div><b>Fog</b><p>Low visibility</p></div></div>
+                    <div class="sym-item"><i class="fa-regular fa-snowflake text-info"></i><div><b>Snow</b><p>Freezing precipitation</p></div></div>
+                    <div class="sym-item"><i class="fa-solid fa-wind text-dark"></i><div><b>Windy</b><p>Strong gusts</p></div></div>
+                </div>
+            </section>
+
+            <!-- SECTION 6: AIR QUALITY -->
+            <section class="about-section">
+                <h2>6. Air Quality and AQI</h2>
+                <p class="section-desc">AQI (Air Quality Index) tells you how clean or polluted the air is. It measures pollutants like PM2.5, PM10, Ozone, and Nitrogen Dioxide.</p>
+                <div class="aqi-scale-box">
+                    <div class="aqi-level" style="border-left-color: #34a853;"><b>0-50: Good</b></div>
+                    <div class="aqi-level" style="border-left-color: #fbbc04;"><b>51-100: Moderate</b></div>
+                    <div class="aqi-level" style="border-left-color: #fa7b17;"><b>101-150: Unhealthy for Sensitive Groups</b></div>
+                    <div class="aqi-level" style="border-left-color: #ea4335;"><b>151-200: Unhealthy</b></div>
+                    <div class="aqi-level" style="border-left-color: #a142f4;"><b>201-300: Very Unhealthy</b></div>
+                    <div class="aqi-level" style="border-left-color: #800000;"><b>301+: Hazardous</b></div>
+                </div>
+                <a href="/aqi.html" class="orange-search-btn" style="display:inline-block; text-decoration:none; margin-top:15px; text-align:center;"><i class="fa-solid fa-wind"></i> Explore Live AQI</a>
+            </section>
+
+            <!-- SECTION 7: EXTREME WEATHER -->
+            <section class="about-section">
+                <h2>7. Extreme Weather Facts</h2>
+                <div class="extreme-grid">
+                    <div class="ex-card"><i class="fa-solid fa-temperature-arrow-up text-danger"></i><b>Heatwave</b><p>Extended periods of excessive heat.</p></div>
+                    <div class="ex-card"><i class="fa-solid fa-cloud-bolt text-warning"></i><b>Thunderstorm</b><p>Accompanied by lightning, strong winds.</p></div>
+                    <div class="ex-card"><i class="fa-solid fa-cloud-showers-heavy text-primary"></i><b>Heavy Rain & Flood</b><p>Excessive water overflowing land.</p></div>
+                    <div class="ex-card"><i class="fa-solid fa-hurricane text-dark"></i><b>Cyclone</b><p>Severe rotating storm system.</p></div>
+                    <div class="ex-card"><i class="fa-solid fa-icicles text-info"></i><b>Cold Wave</b><p>Rapid and dangerous drop in temperature.</p></div>
+                    <div class="ex-card"><i class="fa-solid fa-plant-wilt text-warning"></i><b>Drought</b><p>Prolonged shortages in the water supply.</p></div>
+                </div>
+            </section>
+
+            <!-- SECTION 8: SAFETY TIPS -->
+            <section class="about-section">
+                <h2>8. Weather Safety Checklists</h2>
+                <div class="safety-grid">
+                    <div class="safety-box">
+                        <h3><i class="fa-solid fa-fire text-danger"></i> During Extreme Heat</h3>
+                        <ul>
+                            <li><i class="fa-solid fa-check text-success"></i> Stay hydrated</li>
+                            <li><i class="fa-solid fa-check text-success"></i> Avoid prolonged direct sunlight</li>
+                            <li><i class="fa-solid fa-check text-success"></i> Check local warnings</li>
+                        </ul>
+                    </div>
+                    <div class="safety-box">
+                        <h3><i class="fa-solid fa-cloud-bolt text-warning"></i> During Thunderstorms</h3>
+                        <ul>
+                            <li><i class="fa-solid fa-check text-success"></i> Stay indoors when possible</li>
+                            <li><i class="fa-solid fa-check text-success"></i> Avoid exposed locations</li>
+                            <li><i class="fa-solid fa-check text-success"></i> Follow local safety guidance</li>
+                        </ul>
+                    </div>
+                    <div class="safety-box">
+                        <h3><i class="fa-solid fa-cloud-showers-heavy text-primary"></i> During Heavy Rain</h3>
+                        <ul>
+                            <li><i class="fa-solid fa-check text-success"></i> Avoid flooded roads</li>
+                            <li><i class="fa-solid fa-check text-success"></i> Follow local warnings</li>
+                            <li><i class="fa-solid fa-check text-success"></i> Take care near fast-moving water</li>
+                        </ul>
+                    </div>
+                    <div class="safety-box">
+                        <h3><i class="fa-solid fa-mask-ventilator text-secondary"></i> Poor Air Quality</h3>
+                        <ul>
+                            <li><i class="fa-solid fa-check text-success"></i> Check AQI levels</li>
+                            <li><i class="fa-solid fa-check text-success"></i> Reduce prolonged outdoor exposure</li>
+                            <li><i class="fa-solid fa-check text-success"></i> Follow local health guidance</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 9: FAQ -->
+            <section class="about-section">
+                <h2>9. Frequently Asked Questions</h2>
+                <div class="faq-container" id="faqContainer">
+                    <!-- Populated via JS -->
+                </div>
+            </section>
+        </div>
+
+        <div class="site-footer" style="text-align: center; padding: 20px 10px; font-size: 13px; color: #5f6368; margin-bottom: 20px; line-height: 2;">
+            <a href="/about.html" style="color: #5f6368; text-decoration: none;">About Us</a> &nbsp;&middot;&nbsp; 
+            <a href="/contact.html" style="color: #5f6368; text-decoration: none;">Contact Us</a> &nbsp;&middot;&nbsp; 
+          

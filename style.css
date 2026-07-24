@@ -1,0 +1,592 @@
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, sans-serif; }
+body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; display: flex; justify-content: center; }
+.main-container { max-width: 480px; width: 100%; display: flex; flex-direction: column; gap: 16px; }
+.wider-container { max-width: 650px !important; }
+.compact-header { display: flex; align-items: center; justify-content: space-between; padding: 4px 0; }
+.header-left, .header-right { display: flex; align-items: center; gap: 10px; }
+.icon-btn { background: transparent; border: none; font-size: 18px; color: #3c4043; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s; text-decoration: none; }
+.icon-btn:hover { background-color: #e8eaed; }
+.brand-logo { display: flex; align-items: center; gap: 8px; }
+.globe-img { width: 26px; height: 26px; }
+.brand-text { font-size: 18px; font-weight: 600; color: #1a73e8; }
+.top-search-section { display: flex; gap: 10px; }
+.search-input-wrap { flex: 1; background: #ffffff; border: 1px solid #dadce0; border-radius: 12px; padding: 0 16px; height: 46px; display: flex; align-items: center; }
+.search-input-wrap input { width: 100%; border: none; outline: none; font-size: 15px; background: transparent; }
+.orange-search-btn { background-color: #ff5722; color: #ffffff; border: none; border-radius: 12px; padding: 0 20px; font-size: 15px; font-weight: 600; cursor: pointer; }
+.nav-tabs-container { background: #ffffff; border: 1px solid #dadce0; border-radius: 14px; display: flex; padding: 4px; gap: 4px; }
+.tab-btn { flex: 1; background: transparent; border: none; padding: 8px 0; border-radius: 10px; font-size: 14px; font-weight: 600; color: #5f6368; text-decoration: none; text-align: center; }
+.tab-btn.active { background-color: #e8f0fe; color: #1a73e8; }
+.weather-hero-card { background: linear-gradient(135deg, #1b4f72 0%, #2e86c1 50%, #5dade2 100%); border-radius: 20px; color: #ffffff; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.12); margin-bottom:10px; }
+.weather-content { padding: 20px; background: url('https://images.unsplash.com/photo-1514565131-fce0801e5785?q=80&w=1000&auto=format&fit=crop') center/cover no-repeat; background-blend-mode: overlay; background-color: rgba(15, 32, 67, 0.45); }
+.location-info { display: flex; align-items: center; gap: 6px; font-size: 20px; font-weight: 600; }
+.temp-display { display: flex; align-items: flex-start; margin: 6px 0; }
+.temp-value { font-size: 64px; font-weight: 700; line-height: 1; }
+.temp-unit { font-size: 28px; font-weight: 500; margin-top: 4px; }
+.hi-lo-pills { margin-top: 12px; background: rgba(255, 255, 255, 0.25); display: inline-flex; gap: 10px; padding: 6px 14px; border-radius: 16px; font-size: 13px; font-weight: 600; }
+.weather-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); background: rgba(10, 25, 47, 0.8); padding: 12px 4px; text-align: center; color: #fff; }
+.stat-item { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 11px; }
+.stat-item i { font-size: 16px; color: #64b5f6; }
+.page-title-box { padding: 10px 0; }
+.page-title-box h1, .page-title-box h2 { font-size: 22px; font-weight: 700; color: #202124; }
+.page-title-box p { font-size: 13px; color: #5f6368; }
+.forecast-list-container { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+.daily-card { background: #ffffff; border-radius: 16px; border: 1px solid #dadce0; overflow: hidden; transition: box-shadow 0.3s; }
+.daily-card.active { box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-color: #c6dafc; }
+.daily-summary { display: flex; align-items: center; justify-content: space-between; padding: 16px; cursor: pointer; background: #ffffff; }
+.daily-card.active .daily-summary { background: #f8faff; border-bottom: 1px solid #e8eaed; }
+.day-col { display: flex; flex-direction: column; width: 60px; }
+.day-name { font-size: 14px; font-weight: 600; }
+.day-date { font-size: 12px; color: #5f6368; }
+.icon-col i { font-size: 22px; }
+.conditions-col { display: flex; flex-direction: column; font-size: 11px; color: #5f6368; width: 110px; gap: 4px;}
+.temp-col { display: flex; gap: 8px; font-size: 15px; font-weight: 600; width: 60px; justify-content: flex-end; }
+.arrow-col { width: 24px; display: flex; justify-content: flex-end; color: #9aa0a6; }
+.expand-icon { transition: transform 0.3s ease; }
+.daily-card.active .expand-icon { transform: rotate(180deg); color: #1a73e8; }
+.daily-details { max-height: 0; overflow: hidden; transition: max-height 0.35s ease-out; background: #fdfdfd; }
+.daily-card.active .daily-details { max-height: 300px; }
+.details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px; }
+.d-item { display: flex; align-items: center; gap: 12px; }
+.d-item i { font-size: 20px; background: #f1f3f4; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+.d-info span { font-size: 11px; color: #5f6368; display: block; }
+.d-info b { font-size: 13px; color: #202124; }
+.aqi-hero-card { background: #ffffff; border-radius: 16px; padding: 20px; border: 1px solid #dadce0; display: flex; flex-direction: column; gap: 16px; margin-bottom: 16px;}
+.aqi-score-box { display: flex; align-items: center; gap: 12px; }
+.aqi-big-num { font-size: 48px; font-weight: 700; line-height: 1; }
+.aqi-status-badge { padding: 4px 12px; border-radius: 20px; font-size: 14px; font-weight: 600; }
+.aqi-status-badge.good { background: #e8f5e9; color: #2e7d32; }
+.aqi-status-badge.moderate { background: #fff8e1; color: #f57f17; }
+.aqi-status-badge.unhealthy { background: #fce8e6; color: #c5221f; }
+.pollutants-side-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; border-top: 1px solid #e8eaed; padding-top: 14px; }
+.pollutant-pill-box { background: #f8f9fa; border: 1px solid #e8eaed; border-radius: 10px; padding: 8px 10px; }
+.p-name { font-size: 11px; color: #5f6368; display: block;}
+.p-val { font-size: 13px; font-weight: 700; }
+.bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #ffffff; border-top: 1px solid #dadce0; display: flex; justify-content: space-around; padding: 8px 0; z-index: 1000; }
+.b-nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; text-decoration: none; color: #5f6368; font-size: 11px; font-weight: 500; }
+.b-nav-item i { font-size: 18px; }
+.b-nav-item.active { color: #1a73e8; }
+.text-warning { color: #fbbc04; }
+.text-info { color: #4fc3f7; }
+.text-primary { color: #1a73e8; }
+.text-secondary { color: #9aa0a6; }
+.text-danger { color: #ea4335; }
+.text-good { color: #137333; }
+/* --- NEW: Hourly Section & Chart Styles --- */
+.hourly-forecast-card { background: #ffffff; border-radius: 16px; padding: 16px; border: 1px solid #dadce0; margin-bottom: 20px; }
+.section-title { font-size: 16px; font-weight: 700; color: #202124; margin-bottom: 12px; }
+
+/* 7 Days Tabs */
+.hourly-tabs-container { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 8px; margin-bottom: 12px; }
+.hourly-tabs-container::-webkit-scrollbar { display: none; }
+.h-tab-btn { background: #f1f3f4; border: 1px solid transparent; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; color: #5f6368; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+.h-tab-btn.active { background: #e8f0fe; color: #1a73e8; border-color: #1a73e8; }
+
+/* Chart Wrapper */
+.hourly-chart-wrapper { width: 100%; overflow-x: auto; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px dashed #e8eaed; }
+.hourly-chart-wrapper::-webkit-scrollbar { height: 4px; }
+.hourly-chart-wrapper::-webkit-scrollbar-thumb { background: #dadce0; border-radius: 4px; }
+
+/* Scrollable Hourly Cards */
+.hourly-cards-row { display: flex; overflow-x: auto; gap: 12px; padding-bottom: 8px; }
+.hourly-cards-row::-webkit-scrollbar { display: none; }
+.h-card { display: flex; flex-direction: column; align-items: center; background: #f8f9fa; border: 1px solid #e8eaed; padding: 12px 10px; border-radius: 12px; min-width: 65px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+.h-time { font-size: 11px; color: #5f6368; margin-bottom: 8px; font-weight: 500; }
+.h-icon { font-size: 22px; margin-bottom: 8px; }
+.h-temp { font-size: 15px; font-weight: 700; color: #202124; }
+.h-rain { font-size: 11px; color: #1a73e8; font-weight: 600; margin-top: 6px; }
+/* --- Auto Suggestion Dropdown Styles --- */
+.suggestions-box {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border: 1px solid #dadce0;
+    border-radius: 12px;
+    margin-top: 6px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    z-index: 2000; /* Tabs ke upar dikhne ke liye */
+    max-height: 280px;
+    overflow-y: auto;
+    display: none; /* Default hide rahega */
+}
+
+/* Scrollbar design for suggestions */
+.suggestions-box::-webkit-scrollbar { width: 6px; }
+.suggestions-box::-webkit-scrollbar-thumb { background: #dadce0; border-radius: 4px; }
+
+.suggestion-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #f1f3f4;
+    display: flex;
+    flex-direction: column;
+    transition: background 0.2s;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-item:hover {
+    background-color: #f8f9fa;
+}
+
+.sugg-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #202124;
+    margin-bottom: 2px;
+}
+
+.sugg-desc {
+    font-size: 12px;
+    color: #5f6368;
+}
+/* --- Compact AQI Card (Home Page) --- */
+.compact-aqi-card { background: #ffffff; border-radius: 16px; padding: 16px; border: 1px solid #dadce0; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+.c-aqi-left { display: flex; align-items: center; gap: 12px; }
+.c-aqi-icon { font-size: 24px; color: #34a853; background: #e8f5e9; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+.c-aqi-text h4 { font-size: 15px; font-weight: 700; color: #202124; margin-bottom: 2px; }
+.c-aqi-text p { font-size: 12px; color: #5f6368; }
+.c-aqi-right { display: flex; align-items: center; gap: 10px; }
+.c-aqi-val { font-size: 26px; font-weight: 700; }
+
+/* --- Smart Hub Advice Card --- */
+.smart-advice-card { background: #ffffff; border-radius: 16px; padding: 16px; border: 1px solid #dadce0; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+.advice-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; border-bottom: 1px solid #f1f3f4; padding-bottom: 12px; }
+.advice-header h3 { font-size: 17px; font-weight: 700; color: #202124; }
+.advice-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.advice-list li { display: flex; gap: 12px; align-items: flex-start; font-size: 13.5px; color: #3c4043; line-height: 1.5; background: #f8f9fa; padding: 12px; border-radius: 12px; border-left: 4px solid #1a73e8; }
+.advice-list li i { font-size: 16px; margin-top: 3px; width: 20px; text-align: center; }
+/* =========================================
+   PREMIUM AQI DASHBOARD STYLES 
+========================================= */
+
+/* Main Hero Grid */
+.aqi-premium-hero {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+@media(min-width: 768px) {
+    .aqi-premium-hero { grid-template-columns: 1fr 1.2fr; }
+}
+
+/* Left: Gauge Side */
+.hero-gauge-side {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid #dadce0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    text-align: center;
+}
+.location-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #202124;
+    margin-bottom: 20px;
+}
+.location-title h2 { font-size: 18px; font-weight: 600; }
+.location-title i { color: #ea4335; }
+
+/* SVG Gauge Wrapper */
+.gauge-wrapper {
+    position: relative;
+    width: 220px;
+    margin: 0 auto;
+}
+.aqi-svg-gauge {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+}
+.gauge-center-text {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.gauge-center-text h1 {
+    font-size: 52px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+.aqi-status-text {
+    font-size: 18px;
+    font-weight: 700;
+}
+.gauge-labels {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #5f6368;
+    font-weight: 600;
+    margin-top: 10px;
+    padding: 0 10px;
+}
+.us-aqi-pill {
+    background: #f1f3f4;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+}
+.aqi-health-msg {
+    font-size: 12px;
+    color: #5f6368;
+    margin-top: 20px;
+    line-height: 1.5;
+}
+
+/* Right: Pollutants Side */
+.hero-pollutants-side {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid #dadce0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+.side-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #202124;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+}
+.premium-pollutant-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+.p-box {
+    background: #f8f9fa;
+    border: 1px solid #f1f3f4;
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.2s;
+}
+.p-box:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+.p-left { display: flex; flex-direction: column; }
+.p-title { font-size: 13px; font-weight: 600; color: #202124; }
+.p-unit { font-size: 10px; color: #9aa0a6; }
+.p-right { display: flex; flex-direction: column; align-items: flex-end; }
+.p-val { font-size: 18px; font-weight: 700; }
+.p-stat { font-size: 10px; font-weight: 600; }
+
+/* 3-Column Grid Bottom */
+.premium-3col-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+@media(min-width: 800px) {
+    .premium-3col-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.premium-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 16px;
+    border: 1px solid #dadce0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    display: flex;
+    flex-direction: column;
+}
+.card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #202124;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+}
+.forecast-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+.f-tab {
+    background: #e8f5e9;
+    color: #137333;
+    border: none;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+.chart-container {
+    position: relative;
+    height: 140px;
+    width: 100%;
+    margin-top: auto;
+}
+
+/* Health Recs List inside Premium Card */
+.health-recs-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.health-recs-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    color: #3c4043;
+    line-height: 1.4;
+}
+.rec-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+/* --- New AQI Sections Styling --- */
+.outside-time-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    border-left: 5px solid;
+    background: #f8f9fa;
+}
+.outside-time-box.good-time { border-left-color: #34a853; }
+.outside-time-box.avoid-time { border-left-color: #ea4335; }
+
+.t-left { display: flex; flex-direction: column; gap: 2px; }
+.t-badge-label { font-size: 12px; font-weight: 700; color: #3c4043; }
+.t-time-val { font-size: 15px; font-weight: 700; color: #202124; }
+
+.smart-hub-advice-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.smart-hub-advice-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: #3c4043;
+    line-height: 1.4;
+}
+.smart-hub-advice-list i {
+    font-size: 16px;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.five-day-aqi-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.f-day-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border: 1px solid #f1f3f4;
+}
+.f-date { font-size: 13px; font-weight: 600; color: #202124; }
+.f-val-badge { font-size: 16px; font-weight: 700; }
+/* =========================================
+   ABOUT WEATHER PAGE STYLES 
+========================================= */
+
+.about-hero-section {
+    padding: 24px;
+    margin-bottom: 24px;
+    background: linear-gradient(145deg, #ffffff, #f8f9fa);
+}
+.breadcrumb {
+    font-size: 12px;
+    color: #5f6368;
+    margin-bottom: 16px;
+}
+.breadcrumb a { color: #1a73e8; text-decoration: none; }
+.hero-content-flex {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.hero-icon { font-size: 40px; }
+.hero-content-flex h1 { font-size: 22px; margin-bottom: 6px; color: #202124; }
+.hero-subtitle { font-size: 13px; color: #5f6368; line-height: 1.4; }
+
+.about-section {
+    margin-bottom: 30px;
+    padding: 0 10px;
+}
+.about-section h2 {
+    font-size: 18px;
+    color: #202124;
+    margin-bottom: 8px;
+    border-bottom: 2px solid #f1f3f4;
+    padding-bottom: 8px;
+}
+.section-desc { font-size: 13px; color: #5f6368; margin-bottom: 16px; line-height: 1.5; }
+
+/* Grid Comparisons */
+.comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.compare-card { background: #fff; padding: 16px; border-radius: 12px; border: 1px solid #dadce0; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+.c-header { margin-bottom: 8px; font-size: 14px; }
+.compare-card p { font-size: 12px; color: #5f6368; line-height: 1.4; }
+
+/* Metrics Grid */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+}
+.metric-info-card {
+    background: #fff; padding: 14px; border-radius: 12px; border: 1px solid #dadce0;
+    transition: transform 0.2s;
+}
+.metric-info-card:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+.metric-info-card i { font-size: 18px; margin-bottom: 8px; }
+.metric-info-card h3 { font-size: 13px; margin-bottom: 4px; color: #202124; }
+.metric-info-card p { font-size: 11px; color: #5f6368; line-height: 1.4; }
+
+/* Timeline */
+.timeline-container { display: flex; flex-direction: column; gap: 10px; }
+.timeline-step { display: flex; gap: 12px; background: #fff; padding: 12px; border-radius: 12px; border: 1px solid #f1f3f4; align-items: center;}
+.t-icon { width: 36px; height: 36px; border-radius: 50%; background: #e8f0fe; color: #1a73e8; display: flex; align-items: center; justify-content: center; flex-shrink: 0;}
+.t-content b { font-size: 13px; color: #202124; }
+.t-content p { font-size: 11px; color: #5f6368; margin-top: 2px; }
+
+/* Sample Forecast */
+.sample-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+.sample-list li { font-size: 13px; padding: 8px; background: #f8f9fa; border-radius: 8px; }
+.sample-list li span { color: #5f6368; font-size: 11px; display: block; margin-top: 2px; }
+
+/* Symbols Grid */
+.symbols-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
+.sym-item { display: flex; align-items: center; gap: 12px; background: #fff; padding: 12px; border: 1px solid #dadce0; border-radius: 12px; }
+.sym-item i { font-size: 20px; width: 24px; text-align: center; }
+.sym-item b { font-size: 12px; color: #202124; display:block; }
+.sym-item p { font-size: 10px; color: #5f6368; }
+
+/* AQI Scale */
+.aqi-scale-box { display: flex; flex-direction: column; gap: 6px; }
+.aqi-level { background: #f8f9fa; padding: 8px 12px; border-radius: 6px; border-left: 4px solid; font-size: 12px; }
+
+/* Extreme Grid */
+.extreme-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+.ex-card { background: #fff; padding: 12px; border: 1px solid #fce8e6; border-radius: 12px; text-align: center; }
+.ex-card i { font-size: 20px; margin-bottom: 8px; }
+.ex-card b { display: block; font-size: 13px; margin-bottom: 4px; }
+.ex-card p { font-size: 11px; color: #5f6368; }
+
+/* Safety Grid */
+.safety-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media(min-width: 600px){ .safety-grid { grid-template-columns: 1fr 1fr; } }
+.safety-box { background: #fff; padding: 16px; border: 1px solid #dadce0; border-radius: 12px; }
+.safety-box h3 { font-size: 14px; margin-bottom: 12px; }
+.safety-box ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.safety-box li { font-size: 12px; color: #3c4043; display: flex; align-items: flex-start; gap: 8px; }
+.safety-box li i { margin-top: 2px; font-size: 12px; }
+
+/* FAQ Accordion */
+.faq-container { display: flex; flex-direction: column; gap: 10px; }
+.faq-item { background: #fff; border: 1px solid #dadce0; border-radius: 12px; overflow: hidden; }
+.faq-question { width: 100%; text-align: left; background: none; border: none; padding: 14px; font-size: 13px; font-weight: 600; color: #202124; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+.faq-icon { transition: transform 0.3s ease; color: #5f6368; }
+.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out, padding 0.3s ease; background: #f8f9fa; }
+.faq-answer.active { max-height: 200px; padding: 14px; border-top: 1px solid #f1f3f4; }
+.faq-answer p { font-size: 12px; color: #3c4043; line-height: 1.5; margin: 0; }
+.hourly-chart-wrapper {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 10px;
+    width: 100%;
+}
+/* Ultra-Premium AQI Hero Card Styling */
+.aqi-premium-hero {
+    background: linear-gradient(145deg, #ffffff, #f8f9fa);
+    border: 1px solid #dadce0;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    margin-bottom: 16px;
+}
+.hero-gauge-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+.location-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #1a73e8;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+.gauge-wrapper {
+    position: relative;
+    width: 240px;
+    margin: 10px auto;
+}
+.aqi-svg-gauge {
+    width: 100%;
+    transform: rotate(0deg);
+}
+.gauge-center-text {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
+.gauge-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #5f6368;
+    margin-top: -10px;
+    padding: 0 10px;
+}
+.us-aqi-pill {
+    background: #e8f0fe;
+    color: #1a73e8;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 10px;
+}
+.aqi-health-msg {
+    font-size: 13px;
+    color: #5f6368;
+    margin-top: 15px;
+    line-height: 1.4;
+    background: #f1f3f4;
+    padding: 10px 16px;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}

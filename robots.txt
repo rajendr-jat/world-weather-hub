@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://world-weather-hub.p123.workers.dev/sitemap.xml
+

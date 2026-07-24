@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16-Day Extended Weather Forecast | World Weather Hub</title>
+    <meta name="description" content="Plan ahead with our 16-day extended daily weather forecast. Track upcoming temperature highs and lows, rain probability, and daily weather conditions.">
+    <meta name="robots" content="index, follow">
+    
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="main-container wider-container" style="max-width: 900px !important;">
+        
+        <header class="compact-header">
+            <div class="header-left">
+                <button class="icon-btn"><i class="fa-solid fa-bars"></i></button>
+                <div class="brand-logo">
+                    <img src="https://img.icons8.com/color/48/globe.png" alt="logo" class="globe-img">
+                    <span class="brand-text">World Weather Hub</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="icon-btn"><i class="fa-solid fa-location-dot"></i></button>
+            </div>
+        </header>
+
+        <div class="top-search-section">
+            <div class="search-input-wrap" style="position: relative;">
+                <input type="text" id="searchInput" placeholder="Search city for 16-day forecast..." autocomplete="off">
+                <div class="suggestions-box" id="suggestionsBox"></div>
+            </div>
+            <button class="orange-search-btn" id="searchBtn">Search</button>
+        </div>
+
+        <div class="nav-tabs-container scrollable-tabs">
+            <a href="/" class="tab-btn">Today</a>
+            <a href="/forecast.html" class="tab-btn active">16 Days</a>
+            <a href="/aqi.html" class="tab-btn">AQI</a>
+            <a href="/history.html" class="tab-btn">History</a>
+            <a href="/about.html" class="tab-btn">About</a>
+        </div>
+
+        <div class="page-title-box">
+            <h1 id="forecastCityTitle" style="font-size: 20px; color: #202124;">New Delhi, India</h1>
+            <p>Extended 16-Day Weather Forecast</p>
+        </div>
+
+        <div id="forecastLoader" style="text-align:center; padding: 50px;">
+            <i class="fa-solid fa-spinner fa-spin" style="font-size: 30px; color:#1a73e8;"></i>
+            <p style="margin-top: 10px; color:#5f6368;">Fetching 16-day forecast...</p>
+        </div>
+
+        <div id="forecastDashboardContent" style="display: none;">
+            <div class="premium-card">
+                <div id="sixteenDayList"></div>
+            </div>
+        </div>
+
+        <div class="site-footer" style="text-align: center; padding: 20px 10px; font-size: 13px; color: #5f6368; margin-bottom: 20px; line-height: 2;">
+            <a href="/about.html" style="color: #5f6368; text-decoration: none;">About Us</a> &nbsp;&middot;&nbsp; 
+            <a href="/contact.html" style="color: #5f6368; text-decoration: none;">Contact Us</a> &nbsp;&middot;&nbsp; 
+            <a href="/privacy.html" style="color: #5f6368; text-decoration: none;">Privacy Policy</a><br>
+            <a href="/terms.html" style="color: #5f6368; text-decoration: none;">Terms</a> &nbsp;&middot;&nbsp; 
+            <a href="/disclaimer.html" style="color: #5f6368; text-decoration: none;">Disclaimer</a> &nbsp;&middot;&nbsp; 
+            <a href="/cookie.html" style="color: #5f6368; text-decoration: none;">Cookie Policy</a>
+            <p style="margin-top: 10px;">&copy; 2026 World Weather Hub</p>
+        </div>
+
+        <nav class="bottom-nav" style="flex-wrap: wrap; justify-content: space-around;">
+            <a href="/" class="b-nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+            <a href="/forecast.html" class="b-nav-item active"><i class="fa-solid fa-calendar-days"></i><span>16 Days</span></a>
+            <a href="/aqi.html" class="b-nav-item"><i class="fa-solid fa-wind"></i><span>AQI</span></a>
+            <a href="/history.html" class="b-nav-item"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></a>
+            <a href="/about.html" class="b-nav-item"><i class="fa-solid fa-circle-info"></i><span>About</span></a>
+        </nav>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/cities.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/search.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/forecast.js"></script>
+</body>
+</html>

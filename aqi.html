@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Air Quality Index (AQI) & Pollutant Data | World Weather Hub</title>
+    <meta name="description" content="Check real-time Air Quality Index (AQI), pollutant breakdowns (PM2.5, PM10, Ozone), and 24-hour air quality trends to plan your outdoor activities safely.">
+    <meta name="robots" content="index, follow">
+    
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/style.css">
+    
+    <!-- inline styles as they were... -->
+    <style>
+        .aqi-scale-container { display: flex; height: 12px; border-radius: 6px; overflow: hidden; margin: 15px 0 8px 0; background: #eee; position: relative; }
+        .scale-segment { flex: 1; height: 100%; }
+        .aqi-pointer-wrap { position: relative; width: 100%; height: 20px; margin-bottom: 10px; }
+        .aqi-pointer { position: absolute; transform: translateX(-50%); font-size: 14px; color: #202124; transition: left 0.8s ease-out; }
+        .health-advice-box { background: #f8f9fa; border-left: 4px solid #1a73e8; padding: 16px; border-radius: 8px; margin-top: 15px; }
+        .health-advice-box h4 { font-size: 14px; margin-bottom: 6px; color: #202124; display: flex; align-items: center; gap: 8px; }
+        .health-advice-box p { font-size: 12px; color: #5f6368; line-height: 1.5; margin: 0; }
+        .pollutant-row { background: #f8f9fa; padding: 14px; border-radius: 12px; border: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .pollutant-info { max-width: 65%; }
+        .pollutant-metrics { text-align: right; }
+    </style>
+</head>
+<body>
+    <div class="main-container wider-container" style="max-width: 900px !important;">
+        
+        <header class="compact-header">
+            <div class="header-left">
+                <button class="icon-btn"><i class="fa-solid fa-bars"></i></button>
+                <div class="brand-logo">
+                    <img src="https://img.icons8.com/color/48/globe.png" alt="logo" class="globe-img">
+                    <span class="brand-text">World Weather Hub</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="icon-btn"><i class="fa-solid fa-location-dot"></i></button>
+            </div>
+        </header>
+
+        <div class="top-search-section">
+            <div class="search-input-wrap" style="position: relative;">
+                <input type="text" id="searchInput" placeholder="Search city for AQI..." autocomplete="off">
+                <div class="suggestions-box" id="suggestionsBox"></div>
+            </div>
+            <button class="orange-search-btn" id="searchBtn">Search</button>
+        </div>
+
+        <div class="nav-tabs-container scrollable-tabs">
+            <a href="/" class="tab-btn">Today</a>
+            <a href="/forecast.html" class="tab-btn">16 Days</a>
+            <a href="/aqi.html" class="tab-btn active">AQI</a>
+            <a href="/history.html" class="tab-btn">History</a>
+            <a href="/about.html" class="tab-btn">About</a>
+        </div>
+
+        <h1 style="position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden;">Air Quality Index & Pollution Dashboard</h1>
+
+        <div id="aqiDashboardContent" style="display: none;">
+            <div class="aqi-premium-hero">
+                <div class="hero-gauge-side">
+                    <div class="location-title">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span id="aqiCityName" style="font-size: 18px; font-weight:600;">New Delhi, India</span>
+                    </div>
+                    
+                    <div class="gauge-wrapper" style="position: relative; width: 220px; height: 130px; margin: 10px auto 25px auto;">
+                        <svg viewBox="0 -10 100 65" style="width: 100%; height: 100%;">
+                            <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#f1f3f4" stroke-width="9" stroke-linecap="round"></path>
+                            <path id="gaugeFill" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#34a853" stroke-width="9" stroke-linecap="round" stroke-dasharray="125.66" stroke-dashoffset="125.66" style="transition: stroke-dashoffset 1.5s ease-out;"></path>
+                        </svg>
+                        
+                        <div style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); text-align: center; width: 100%;">
+                            <h2 id="mainAqiValue" style="font-size: 44px; margin: 0; font-weight: 700; line-height: 1;">--</h2>
+                            <span id="mainAqiStatus" style="font-size: 15px; font-weight: 600; display: block; margin-top: 4px;">Loading...</span>
+                            <span style="font-size: 10px; color: #808080; text-transform: uppercase; letter-spacing: 0.5px;">US AQI Scale</span>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; font-size: 11px; color: #5f6368; padding: 0 40px; margin-top: -20px; margin-bottom: 20px;">
+                        <span>0</span>
+                        <span>500</span>
+                    </div>
+                    
+                    <p class="aqi-health-msg" id="mainAqiMsg">Fetching real-time intelligent air quality evaluation...</p>
+                    <div id="aqiLastUpdated" style="font-size: 11px; color: #5f6368; margin-top: 8px;"></div>
+                </div>
+            </div>
+
+            <div class="premium-card" style="margin-bottom: 16px;">
+                <h3 class="card-title" style="font-size: 15px; margin-bottom: 14px; color:#202124;"><i class="fa-regular fa-clock"></i> Best Times to Go Outside</h3>
+                
+                <div style="background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; border-left: 4px solid #34a853; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="font-size: 13px; color: #202124; margin-bottom: 6px;">Good Time</div>
+                        <div id="goodTimeRange" style="font-size: 16px; font-weight: 600; color: #202124; letter-spacing: 0.5px;">--:-- AM - --:-- AM</div>
+                    </div>
+                    <i class="fa-solid fa-thumbs-up" style="color: #34a853; font-size: 22px;"></i>
+                </div>
+
+                <div style="background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 14px 16px; border-left: 4px solid #ea4335; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="font-size: 13px; color: #202124; margin-bottom: 6px;">Avoid Time</div>
+                        <div id="avoidTimeRange" style="font-size: 16px; font-weight: 600; color: #202124; letter-spacing: 0.5px;">--:-- PM - --:-- PM</div>
+                    </div>
+                    <i class="fa-solid fa-thumbs-down" style="color: #ea4335; font-size: 22px;"></i>
+                </div>
+            </div>
+
+            <div class="premium-card" style="margin-bottom: 16px; padding: 18px;">
+                <h3 class="card-title" style="font-size: 14px; margin-bottom: 6px;"><i class="fa-solid fa-sliders text-primary"></i> US AQI Reference Scale</h3>
+                <div class="aqi-scale-container">
+                    <div class="scale-segment" style="background: #34a853;"></div>
+                    <div class="scale-segment" style="background: #fbbc04;"></div>
+                    <div class="scale-segment" style="background: #fa7b17;"></div>
+                    <div class="scale-segment" style="background: #ea4335;"></div>
+                    <div class="scale-segment" style="background: #a142f4;"></div>
+                    <div class="scale-segment" style="background: #800000;"></div>
+                </div>
+                <div class="aqi-pointer-wrap">
+                    <div id="aqiPointer" class="aqi-pointer" style="left: 10%;"><i class="fa-solid fa-caret-up" style="font-size: 18px; color: #202124;"></i></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 10px; color: #5f6368; font-weight: 500;">
+                    <span>0</span><span>50</span><span>100</span><span>150</span><span>200</span><span>300</span><span>301+</span>
+                </div>
+            </div>
+
+            <div class="premium-card" style="margin-bottom: 16px;">
+                <h3 class="card-title" style="font-size: 15px; margin-bottom: 4px;"><i class="fa-solid fa-chart-line text-primary"></i> 24-Hour AQI Trend</h3>
+                <p style="font-size: 11px; color: #5f6368; margin-bottom: 10px;">Scroll horizontally to view the complete 24-hour progression.</p>
+                <div style="overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; padding-bottom: 10px;">
+                    <div class="chart-container" style="height: 200px; min-width: 650px;">
+                        <canvas id="aqiForecastChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="premium-card" style="margin-bottom: 16px;">
+                <h3 class="card-title" style="font-size: 15px; margin-bottom: 4px;"><i class="fa-solid fa-flask text-primary"></i> Pollutant Breakdown</h3>
+                <div id="pollutantGrid"></div>
+            </div>
+
+            <div class="premium-card" style="margin-bottom: 16px;">
+                <h3 class="card-title" style="font-size: 15px; margin-bottom: 4px;"><i class="fa-solid fa-heart-pulse text-danger"></i> Health Guidance & Recommendations</h3>
+                <div class="health-advice-box">
+                    <h4><i class="fa-solid fa-users"></i> General Public Advice</h4>
+                    <p id="generalAdviceText">Loading advisory...</p>
+                </div>
+                <div class="health-advice-box" style="border-left-color: #fa7b17; margin-top: 10px;">
+                    <h4><i class="fa-solid fa-shield-halved"></i> Sensitive Groups</h4>
+                    <p id="sensitiveAdviceText">Loading advisory...</p>
+                </div>
+                <div class="health-advice-box" style="border-left-color: #34a853; margin-top: 10px;">
+                    <h4><i class="fa-solid fa-person-running"></i> Outdoor Activity</h4>
+                    <p id="activityAdviceText">Loading advisory...</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="aqiLoader" style="text-align:center; padding: 60px;">
+            <i class="fa-solid fa-spinner fa-spin" style="font-size: 32px; color:#1a73e8;"></i>
+            <p style="margin-top: 10px; color:#5f6368;">Analyzing air quality...</p>
+        </div>
+
+        <div class="site-footer" style="text-align: center; padding: 20px 10px; font-size: 13px; color: #5f6368; margin-bottom: 20px; line-height: 2;">
+            <a href="/about.html" style="color: #5f6368; text-decoration: none;">About Us</a> &nbsp;&middot;&nbsp; 
+            <a href="/contact.html" style="color: #5f6368; text-decoration: none;">Contact Us</a> &nbsp;&middot;&nbsp; 
+            <a href="/privacy.html" style="color: #5f6368; text-decoration: none;">Privacy Policy</a><br>
+            <a href="/terms.html" style="color: #5f6368; text-decoration: none;">Terms</a> &nbsp;&middot;&nbsp; 
+            <a href="/disclaimer.html" style="color: #5f6368; text-decoration: none;">Disclaimer</a> &nbsp;&middot;&nbsp; 
+            <a href="/cookie.html" style="color: #5f6368; text-decoration: none;">Cookie Policy</a>
+            <p style="margin-top: 10px;">&copy; 2026 World Weather Hub</p>
+        </div>
+
+        <nav class="bottom-nav" style="flex-wrap: wrap; justify-content: space-around;">
+            <a href="/" class="b-nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+            <a href="/forecast.html" class="b-nav-item"><i class="fa-solid fa-calendar-days"></i><span>16 Days</span></a>
+            <a href="/aqi.html" class="b-nav-item active"><i class="fa-solid fa-wind"></i><span>AQI</span></a>
+            <a href="/history.html" class="b-nav-item"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></a>
+            <a href="/about.html" class="b-nav-item"><i class="fa-solid fa-circle-info"></i><span>About</span></a>
+        </nav>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/cities.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/search.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/aqi.js"></script>
+</body>
+</html>
