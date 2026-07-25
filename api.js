@@ -16,14 +16,6 @@ function resolveCurrentCity() {
             if (cityData) {
                 const fullLocation = cityData.st ? `${cityData.n}, ${cityData.st}, ${cityData.c}` : `${cityData.n}, ${cityData.c}`;
 
-                // LocalStorage अपडेट करें ताकि दूसरे टैब्स (Forecast, AQI) पर भी यही डेटा दिखे।
-                // NOTE: localStorage.setItem कभी-कभी (private/incognito mode, browser privacy
-                // settings, .pages.dev जैसी shared-suffix domains पर storage partitioning आदि)
-                // throw कर सकता है। पहले यहां try/catch नहीं था, इसलिए setItem fail होते ही
-                // पूरा api.js टूट जाता, ACTIVE_CITY कभी set नहीं होता, और आगे getLat()/getLon()
-                // call होते ही ReferenceError आता — जिससे "Loading local weather..." spinner
-                // हमेशा के लिए अटका रहता (सिर्फ /weather/<city>/ URLs पर, क्योंकि सिर्फ वहीं
-                // setItem call होता है; root "/" पर सिर्फ getItem होता है, इसलिए वो बच जाता था)।
                 try {
                     localStorage.setItem('userCity', fullLocation);
                     localStorage.setItem('userLat', cityData.lat);
@@ -52,8 +44,6 @@ function resolveCurrentCity() {
             name: savedCity || "New Delhi, India"
         };
     } catch (err) {
-        // कोई भी अनदेखी गलती हो, फिर भी एक valid object हमेशा लौटाएं ताकि
-        // ACTIVE_CITY कभी undefined/unresolved ना रहे और पूरी site हैंग ना हो।
         console.error('resolveCurrentCity failed, falling back to default city:', err);
         return { lat: 28.6139, lon: 77.2090, name: "New Delhi, India" };
     }
@@ -68,7 +58,10 @@ function getLon() { return ACTIVE_CITY.lon; }
 async function getWeatherData(lat = getLat(), lon = getLon()) {
     const url = `${WEATHER_API}?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,cloud_cover,wind_speed_10m&hourly=temperature_2m,weather_code,precipitation_probability,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_sum,precipitation_probability_max,wind_speed_10m_max,wind_direction_10m_dominant,shortwave_radiation_sum&timezone=auto&forecast_days=16`;
     try {
-        const response = await fetch(url);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 12000);
+        const response = await fetch(url, { signal: controller.signal });
+        clearTimeout(timeoutId);
         if (!response.ok) throw new Error("Network response was not ok");
         return await response.json();
     } catch (error) { return null; }
@@ -77,7 +70,10 @@ async function getWeatherData(lat = getLat(), lon = getLon()) {
 async function getAirQualityData(lat = getLat(), lon = getLon()) {
     const url = `${AQI_API}?latitude=${lat}&longitude=${lon}&current=us_aqi,pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone&hourly=us_aqi&timezone=auto&forecast_days=3`;
     try {
-        const response = await fetch(url);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 12000);
+        const response = await fetch(url, { signal: controller.signal });
+        clearTimeout(timeoutId);
         if (!response.ok) throw new Error("Network response was not ok");
         return await response.json();
     } catch (error) { return null; }
