@@ -3,33 +3,60 @@ const AQI_API = "https://air-quality-api.open-meteo.com/v1/air-quality";
 
 // URL से शहर पहचानने वाला फंक्शन
 function resolveCurrentCity() {
-    const path = window.location.pathname;
-    let slug = null;
+    try {
+        const path = window.location.pathname;
+        let slug = null;
 
-    if (path.startsWith('/weather/')) {
-        slug = path.split('/')[2];
-    }
-
-    if (slug && typeof CITIES_DATA !== 'undefined') {
-        const cityData = CITIES_DATA.find(c => c.s === slug);
-        if (cityData) {
-            const fullLocation = cityData.st ? `${cityData.n}, ${cityData.st}, ${cityData.c}` : `${cityData.n}, ${cityData.c}`;
-            
-            // LocalStorage अपडेट करें ताकि दूसरे टैब्स (Forecast, AQI) पर भी यही डेटा दिखे
-            localStorage.setItem('userCity', fullLocation);
-            localStorage.setItem('userLat', cityData.lat);
-            localStorage.setItem('userLon', cityData.lon);
-            
-            return { lat: cityData.lat, lon: cityData.lon, name: fullLocation };
+        if (path.startsWith('/weather/')) {
+            slug = path.split('/')[2];
         }
-    }
 
-    // अगर URL में शहर नहीं है, तो पुराना LocalStorage वाला तरीका यूज़ करें
-    return {
-        lat: localStorage.getItem('userLat') ? parseFloat(localStorage.getItem('userLat')) : 28.6139,
-        lon: localStorage.getItem('userLon') ? parseFloat(localStorage.getItem('userLon')) : 77.2090,
-        name: localStorage.getItem('userCity') || "New Delhi, India"
-    };
+        if (slug && typeof CITIES_DATA !== 'undefined') {
+            const cityData = CITIES_DATA.find(c => c.s === slug);
+            if (cityData) {
+                const fullLocation = cityData.st ? `${cityData.n}, ${cityData.st}, ${cityData.c}` : `${cityData.n}, ${cityData.c}`;
+
+                // LocalStorage अपडेट करें ताकि दूसरे टैब्स (Forecast, AQI) पर भी यही डेटा दिखे।
+                // NOTE: localStorage.setItem कभी-कभी (private/incognito mode, browser privacy
+                // settings, .pages.dev जैसी shared-suffix domains पर storage partitioning आदि)
+                // throw कर सकता है। पहले यहां try/catch नहीं था, इसलिए setItem fail होते ही
+                // पूरा api.js टूट जाता, ACTIVE_CITY कभी set नहीं होता, और आगे getLat()/getLon()
+                // call होते ही ReferenceError आता — जिससे "Loading local weather..." spinner
+                // हमेशा के लिए अटका रहता (सिर्फ /weather/<city>/ URLs पर, क्योंकि सिर्फ वहीं
+                // setItem call होता है; root "/" पर सिर्फ getItem होता है, इसलिए वो बच जाता था)।
+                try {
+                    localStorage.setItem('userCity', fullLocation);
+                    localStorage.setItem('userLat', cityData.lat);
+                    localStorage.setItem('userLon', cityData.lon);
+                } catch (storageErr) {
+                    console.warn('localStorage write failed, continuing without persistence:', storageErr);
+                }
+
+                return { lat: cityData.lat, lon: cityData.lon, name: fullLocation };
+            }
+        }
+
+        // अगर URL में शहर नहीं है, तो पुराना LocalStorage वाला तरीका यूज़ करें
+        let savedLat, savedLon, savedCity;
+        try {
+            savedLat = localStorage.getItem('userLat');
+            savedLon = localStorage.getItem('userLon');
+            savedCity = localStorage.getItem('userCity');
+        } catch (storageErr) {
+            console.warn('localStorage read failed, using default city:', storageErr);
+        }
+
+        return {
+            lat: savedLat ? parseFloat(savedLat) : 28.6139,
+            lon: savedLon ? parseFloat(savedLon) : 77.2090,
+            name: savedCity || "New Delhi, India"
+        };
+    } catch (err) {
+        // कोई भी अनदेखी गलती हो, फिर भी एक valid object हमेशा लौटाएं ताकि
+        // ACTIVE_CITY कभी undefined/unresolved ना रहे और पूरी site हैंग ना हो।
+        console.error('resolveCurrentCity failed, falling back to default city:', err);
+        return { lat: 28.6139, lon: 77.2090, name: "New Delhi, India" };
+    }
 }
 
 const ACTIVE_CITY = resolveCurrentCity();
