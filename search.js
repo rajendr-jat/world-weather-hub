@@ -86,9 +86,13 @@ document.addEventListener("DOMContentLoaded", () => {
                         searchInput.value = "";
 
                         // Spck Editor Fix: Sabhi cities ka data LocalStorage me set karein
-                        localStorage.setItem('userCity', fullLocationName);
-                        localStorage.setItem('userLat', city.latitude);
-                        localStorage.setItem('userLon', city.longitude);
+                        try {
+                            localStorage.setItem('userCity', fullLocationName);
+                            localStorage.setItem('userLat', city.latitude);
+                            localStorage.setItem('userLon', city.longitude);
+                        } catch (storageErr) {
+                            console.warn('localStorage write failed:', storageErr);
+                        }
 
                         // Hamesha home page par data load karein taaki 404 error na aaye
                         if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
