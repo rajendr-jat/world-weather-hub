@@ -35,6 +35,13 @@
             var reason = e.reason && e.reason.message ? e.reason.message : e.reason;
             showError('PROMISE REJECTED: ' + reason);
         });
+        window.addEventListener('load', function() {
+    setTimeout(function() {
+        showError('DEBUG PATH: ' + window.location.pathname);
+        showError('DEBUG CITIES_DATA loaded: ' + (typeof CITIES_DATA !== 'undefined' ? CITIES_DATA.length + ' cities' : 'NOT LOADED'));
+        showError('DEBUG ACTIVE_CITY: ' + (typeof ACTIVE_CITY !== 'undefined' ? ACTIVE_CITY.name : 'NOT DEFINED'));
+    }, 500);
+});
     })();
 </script>
 </head>
