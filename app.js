@@ -5,14 +5,34 @@ async function initHome() {
     const hourlySection = document.getElementById('hourlySection');
     const aqiSection = document.getElementById('compactAqiSection');
     const adviceSection = document.getElementById('smartAdviceSection');
-    const cityName = localStorage.getItem('userCity') || "New Delhi, India";
-    
-    // Yahan hum Weather aur AQI dono ek sath fetch kar rahe hain
-    const [data, aqiData] = await Promise.all([
-        getWeatherData(),
-        getAirQualityData()
-    ]);
 
+    let cityName = "New Delhi, India";
+    try {
+        cityName = localStorage.getItem('userCity') || cityName;
+    } catch (e) { /* localStorage blocked, use default */ }
+
+    try {
+        // Yahan hum Weather aur AQI dono ek sath fetch kar rahe hain
+        const [data, aqiData] = await Promise.all([
+            getWeatherData(),
+            getAirQualityData()
+        ]);
+
+        renderHome(data, aqiData, cityName, card, hourlySection, aqiSection, adviceSection);
+    } catch (err) {
+        // Pehle yahan koi try/catch nahi tha. Agar upar wali koi bhi cheez fail
+        // hoti (jaise ACTIVE_CITY resolve na hona, ya koi aur unexpected error),
+        // to yeh function beech mein hi ruk jaata aur card ka HTML kabhi update
+        // nahi hota — matlab "Loading local weather..." spinner hamesha ke liye
+        // ghumta rehta. Ab error catch hoke user ko clear message dikhega.
+        console.error('initHome failed:', err);
+        if (card) {
+            card.innerHTML = '<div style="padding: 20px; text-align: center;">Error loading weather data. Please refresh the page.</div>';
+        }
+    }
+}
+
+function renderHome(data, aqiData, cityName, card, hourlySection, aqiSection, adviceSection) {
     if(data && data.current) {
         const cur = data.current;
         const icon = getWeatherIcon(cur.weather_code, cur.is_day);
