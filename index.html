@@ -12,38 +12,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="/style.css">
-<script>
-    // ===== TEMPORARY DEBUG HELPER (mobile ke liye) =====
-    (function() {
-        function showError(msg) {
-            var box = document.getElementById('debugErrorBox');
-            if (!box) {
-                box = document.createElement('div');
-                box.id = 'debugErrorBox';
-                box.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#c0392b;color:#fff;padding:12px;font-size:13px;font-family:monospace;white-space:pre-wrap;word-break:break-word;max-height:50vh;overflow:auto;';
-                document.documentElement.appendChild(box);
-            }
-            var line = document.createElement('div');
-            line.style.cssText = 'border-top:1px solid rgba(255,255,255,0.3);padding-top:6px;margin-top:6px;';
-            line.textContent = msg;
-            box.appendChild(line);
-        }
-        window.addEventListener('error', function(e) {
-            showError('ERROR: ' + e.message + ' (' + (e.filename || '').split('/').pop() + ':' + e.lineno + ')');
-        });
-        window.addEventListener('unhandledrejection', function(e) {
-            var reason = e.reason && e.reason.message ? e.reason.message : e.reason;
-            showError('PROMISE REJECTED: ' + reason);
-        });
-        window.addEventListener('load', function() {
-    setTimeout(function() {
-        showError('DEBUG PATH: ' + window.location.pathname);
-        showError('DEBUG CITIES_DATA loaded: ' + (typeof CITIES_DATA !== 'undefined' ? CITIES_DATA.length + ' cities' : 'NOT LOADED'));
-        showError('DEBUG ACTIVE_CITY: ' + (typeof ACTIVE_CITY !== 'undefined' ? ACTIVE_CITY.name : 'NOT DEFINED'));
-    }, 500);
-});
-    })();
-</script>
 </head>
 <body>
     <div class="main-container wider-container" style="max-width: 900px !important;">
