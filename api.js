@@ -1,56 +1,59 @@
 const WEATHER_API = "https://api.open-meteo.com/v1/forecast";
 const AQI_API = "https://air-quality-api.open-meteo.com/v1/air-quality";
-
-// URL से शहर पहचानने वाला फंक्शन
+// URL se city identify karna
 function resolveCurrentCity() {
     try {
         const path = window.location.pathname;
-        let slug = null;
 
+        // URL format: /weather/jaipur
         if (path.startsWith('/weather/')) {
-            slug = path.split('/')[2];
-        }
 
-        if (slug && typeof CITIES_DATA !== 'undefined') {
-            const cityData = CITIES_DATA.find(c => c.s === slug);
-            if (cityData) {
-                const fullLocation = cityData.st ? `${cityData.n}, ${cityData.st}, ${cityData.c}` : `${cityData.n}, ${cityData.c}`;
+            const slug = path.split('/')[2]
+                ?.toLowerCase()
+                .replace(/\/$/, '');
 
-                try {
-                    localStorage.setItem('userCity', fullLocation);
-                    localStorage.setItem('userLat', cityData.lat);
-                    localStorage.setItem('userLon', cityData.lon);
-                } catch (storageErr) {
-                    console.warn('localStorage write failed, continuing without persistence:', storageErr);
+            if (slug && typeof CITIES_DATA !== 'undefined') {
+
+                const cityData = CITIES_DATA.find(city => city.s === slug);
+
+                if (cityData) {
+
+                    const fullLocation = cityData.st
+                        ? `${cityData.n}, ${cityData.st}, ${cityData.c}`
+                        : `${cityData.n}, ${cityData.c}`;
+
+                    return {
+                        lat: cityData.lat,
+                        lon: cityData.lon,
+                        name: fullLocation,
+                        slug: cityData.s
+                    };
                 }
-
-                return { lat: cityData.lat, lon: cityData.lon, name: fullLocation };
             }
         }
 
-        // अगर URL में शहर नहीं है, तो पुराना LocalStorage वाला तरीका यूज़ करें
-        let savedLat, savedLon, savedCity;
-        try {
-            savedLat = localStorage.getItem('userLat');
-            savedLon = localStorage.getItem('userLon');
-            savedCity = localStorage.getItem('userCity');
-        } catch (storageErr) {
-            console.warn('localStorage read failed, using default city:', storageErr);
-        }
+        // Default city
+        return {
+            lat: 28.6139,
+            lon: 77.2090,
+            name: "New Delhi, Delhi, India",
+            slug: "delhi"
+        };
+
+    } catch (error) {
+
+        console.error("City resolve error:", error);
 
         return {
-            lat: savedLat ? parseFloat(savedLat) : 28.6139,
-            lon: savedLon ? parseFloat(savedLon) : 77.2090,
-            name: savedCity || "New Delhi, India"
+            lat: 28.6139,
+            lon: 77.2090,
+            name: "New Delhi, Delhi, India",
+            slug: "delhi"
         };
-    } catch (err) {
-        console.error('resolveCurrentCity failed, falling back to default city:', err);
-        return { lat: 28.6139, lon: 77.2090, name: "New Delhi, India" };
     }
 }
 
 const ACTIVE_CITY = resolveCurrentCity();
-
 // Location Functions
 function getLat() { return ACTIVE_CITY.lat; }
 function getLon() { return ACTIVE_CITY.lon; }
