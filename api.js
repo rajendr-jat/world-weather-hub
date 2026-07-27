@@ -1,59 +1,66 @@
 const WEATHER_API = "https://api.open-meteo.com/v1/forecast";
 const AQI_API = "https://air-quality-api.open-meteo.com/v1/air-quality";
-// URL se city identify karna
+
+// URL से शहर पहचानने वाला फंक्शन
 function resolveCurrentCity() {
     try {
         const path = window.location.pathname;
+        let slug = null;
 
-        // URL format: /weather/jaipur
         if (path.startsWith('/weather/')) {
+            slug = path.split('/')[2];
+        }
 
-            const slug = path.split('/')[2]
-                ?.toLowerCase()
-                .replace(/\/$/, '');
+        if (slug && typeof CITIES_DATA !== 'undefined') {
+            const cityData = CITIES_DATA.find(c => c.s === slug);
+            if (cityData) {
+                const fullLocation = cityData.st ? `${cityData.n}, ${cityData.st}, ${cityData.c}` : `${cityData.n}, ${cityData.c}`;
 
-            if (slug && typeof CITIES_DATA !== 'undefined') {
-
-                const cityData = CITIES_DATA.find(city => city.s === slug);
-
-                if (cityData) {
-
-                    const fullLocation = cityData.st
-                        ? `${cityData.n}, ${cityData.st}, ${cityData.c}`
-                        : `${cityData.n}, ${cityData.c}`;
-
-                    return {
-                        lat: cityData.lat,
-                        lon: cityData.lon,
-                        name: fullLocation,
-                        slug: cityData.s
-                    };
+                // LocalStorage अपडेट करें ताकि दूसरे टैब्स (Forecast, AQI) पर भी यही डेटा दिखे।
+                // NOTE: localStorage.setItem कभी-कभी (private/incognito mode, browser privacy
+                // settings, .pages.dev जैसी shared-suffix domains पर storage partitioning आदि)
+                // throw कर सकता है। पहले यहां try/catch नहीं था, इसलिए setItem fail होते ही
+                // पूरा api.js टूट जाता, ACTIVE_CITY कभी set नहीं होता, और आगे getLat()/getLon()
+                // call होते ही ReferenceError आता — जिससे "Loading local weather..." spinner
+                // हमेशा के लिए अटका रहता (सिर्फ /weather/<city>/ URLs पर, क्योंकि सिर्फ वहीं
+                // setItem call होता है; root "/" पर सिर्फ getItem होता है, इसलिए वो बच जाता था)।
+                try {
+                    localStorage.setItem('userCity', fullLocation);
+                    localStorage.setItem('userLat', cityData.lat);
+                    localStorage.setItem('userLon', cityData.lon);
+                } catch (storageErr) {
+                    console.warn('localStorage write failed, continuing without persistence:', storageErr);
                 }
+
+                return { lat: cityData.lat, lon: cityData.lon, name: fullLocation };
             }
         }
 
-        // Default city
-        return {
-            lat: 28.6139,
-            lon: 77.2090,
-            name: "New Delhi, Delhi, India",
-            slug: "delhi"
-        };
-
-    } catch (error) {
-
-        console.error("City resolve error:", error);
+        // अगर URL में शहर नहीं है, तो पुराना LocalStorage वाला तरीका यूज़ करें
+        let savedLat, savedLon, savedCity;
+        try {
+            savedLat = localStorage.getItem('userLat');
+            savedLon = localStorage.getItem('userLon');
+            savedCity = localStorage.getItem('userCity');
+        } catch (storageErr) {
+            console.warn('localStorage read failed, using default city:', storageErr);
+        }
 
         return {
-            lat: 28.6139,
-            lon: 77.2090,
-            name: "New Delhi, Delhi, India",
-            slug: "delhi"
+            lat: savedLat ? parseFloat(savedLat) : 28.6139,
+            lon: savedLon ? parseFloat(savedLon) : 77.2090,
+            name: savedCity || "New Delhi, India"
         };
+    } catch (err) {
+        // कोई भी अनदेखी गलती हो, फिर भी एक valid object हमेशा लौटाएं ताकि
+        // ACTIVE_CITY कभी undefined/unresolved ना रहे और पूरी site हैंग ना हो।
+        console.error('resolveCurrentCity failed, falling back to default city:', err);
+        return { lat: 28.6139, lon: 77.2090, name: "New Delhi, India" };
     }
 }
 
 const ACTIVE_CITY = resolveCurrentCity();
+
 // Location Functions
 function getLat() { return ACTIVE_CITY.lat; }
 function getLon() { return ACTIVE_CITY.lon; }
@@ -61,10 +68,7 @@ function getLon() { return ACTIVE_CITY.lon; }
 async function getWeatherData(lat = getLat(), lon = getLon()) {
     const url = `${WEATHER_API}?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,cloud_cover,wind_speed_10m&hourly=temperature_2m,weather_code,precipitation_probability,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_sum,precipitation_probability_max,wind_speed_10m_max,wind_direction_10m_dominant,shortwave_radiation_sum&timezone=auto&forecast_days=16`;
     try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 12000);
-        const response = await fetch(url, { signal: controller.signal });
-        clearTimeout(timeoutId);
+        const response = await fetch(url);
         if (!response.ok) throw new Error("Network response was not ok");
         return await response.json();
     } catch (error) { return null; }
@@ -73,10 +77,7 @@ async function getWeatherData(lat = getLat(), lon = getLon()) {
 async function getAirQualityData(lat = getLat(), lon = getLon()) {
     const url = `${AQI_API}?latitude=${lat}&longitude=${lon}&current=us_aqi,pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone&hourly=us_aqi&timezone=auto&forecast_days=3`;
     try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 12000);
-        const response = await fetch(url, { signal: controller.signal });
-        clearTimeout(timeoutId);
+        const response = await fetch(url);
         if (!response.ok) throw new Error("Network response was not ok");
         return await response.json();
     } catch (error) { return null; }
