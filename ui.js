@@ -55,3 +55,53 @@ function toggleFaq(index) {
 }
 
 window.addEventListener('DOMContentLoaded', initFAQ);
+function initMenu() {
+    const menuBtn = document.getElementById('menuBtn');
+    const dropdown = document.getElementById('dropdownMenu');
+    if (!menuBtn || !dropdown) return;
+    menuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle('show');
+    });
+    document.addEventListener('click', (e) => {
+        if (!dropdown.contains(e.target) && e.target !== menuBtn) {
+            dropdown.classList.remove('show');
+        }
+    });
+}
+
+function initLocationButton() {
+    const locBtn = document.getElementById('locBtn');
+    if (!locBtn) return;
+    locBtn.addEventListener('click', () => {
+        if (!navigator.geolocation) {
+            alert("Geolocation is not supported by your browser.");
+            return;
+        }
+        const icon = locBtn.querySelector('i');
+        icon.className = 'fa-solid fa-spinner fa-spin';
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            let cityName = "My Location";
+            try {
+                const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
+                const geo = await res.json();
+                cityName = [geo.locality, geo.principalSubdivision, geo.countryName].filter(Boolean).join(', ') || cityName;
+            } catch (e) { console.warn('Reverse geocoding failed:', e); }
+            try {
+                localStorage.setItem('userLat', lat);
+                localStorage.setItem('userLon', lon);
+                localStorage.setItem('userCity', cityName);
+            } catch (e) { console.warn('localStorage write failed:', e); }
+            window.location.href = '/';
+        }, (error) => {
+            icon.className = 'fa-solid fa-location-dot';
+            alert("Unable to get your location. Please allow location access and try again.");
+            console.error('Geolocation error:', error);
+        });
+    });
+}
+
+window.addEventListener('DOMContentLoaded', initMenu);
+window.addEventListener('DOMContentLoaded', initLocationButton);
