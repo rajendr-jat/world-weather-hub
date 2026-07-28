@@ -14,19 +14,27 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1823211435001427"
      crossorigin="anonymous"></script>
 </head>
-<body>
+ <body>
     <div class="main-container wider-container" style="max-width: 900px !important;">
         
         <header class="compact-header">
             <div class="header-left">
-                <button class="icon-btn"><i class="fa-solid fa-bars"></i></button>
+                <div class="menu-wrap" style="position:relative;">
+                    <button class="icon-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="/about.html"><i class="fa-solid fa-circle-info"></i> About Us</a>
+                        <a href="/contact.html"><i class="fa-solid fa-envelope"></i> Contact Us</a>
+                        <a href="/privacy.html"><i class="fa-solid fa-shield-halved"></i> Privacy Policy</a>
+                        <a href="/terms.html"><i class="fa-solid fa-file-contract"></i> Terms</a>
+                    </div>
+                </div>
                 <div class="brand-logo">
                     <img src="https://img.icons8.com/color/48/globe.png" alt="logo" class="globe-img">
                     <span class="brand-text">World Weather Hub</span>
                 </div>
             </div>
             <div class="header-right">
-                <button class="icon-btn"><i class="fa-solid fa-location-dot"></i></button>
+                <button class="icon-btn" id="locBtn"><i class="fa-solid fa-location-dot"></i></button>
             </div>
         </header>
 
@@ -102,4 +110,4 @@
     <script src="/ui.js"></script>
     <script src="/app.js"></script>
 </body>
-</html>
+</html>         
