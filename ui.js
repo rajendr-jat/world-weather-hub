@@ -99,6 +99,10 @@ function initLocationButton() {
             icon.className = 'fa-solid fa-location-dot';
             alert("Unable to get your location. Please allow location access and try again.");
             console.error('Geolocation error:', error);
+        }, {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
         });
     });
 }
