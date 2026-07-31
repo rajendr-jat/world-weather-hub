@@ -1,4 +1,4 @@
-Const WEATHER_API = "https://api.open-meteo.com/v1/forecast";
+const WEATHER_API = "https://api.open-meteo.com/v1/forecast";
 const AQI_API = "https://air-quality-api.open-meteo.com/v1/air-quality";
 
 // URL से शहर पहचानने वाला फंक्शन
