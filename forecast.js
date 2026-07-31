@@ -6,7 +6,14 @@ async function initForecast() {
 
     if (!container) return;
 
-    if(cityTitle) cityTitle.innerText = localStorage.getItem('userCity') || "New Delhi, India";
+        if (window.ACTIVE_CITY) {
+        if (cityTitle) cityTitle.innerText = window.ACTIVE_CITY.city_name;
+        localStorage.setItem('userCity', window.ACTIVE_CITY.city_name);
+        if (window.ACTIVE_CITY.lat) localStorage.setItem('userLat', window.ACTIVE_CITY.lat);
+        if (window.ACTIVE_CITY.lon) localStorage.setItem('userLon', window.ACTIVE_CITY.lon);
+    } else {
+        if(cityTitle) cityTitle.innerText = localStorage.getItem('userCity') || "New Delhi, India";
+        }
 
     try {
         const data = await getWeatherData();
