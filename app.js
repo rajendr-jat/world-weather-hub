@@ -1,7 +1,8 @@
 let hourlyChartInstance = null;
 
 async function initHome() {
-    const card = document.getElementById('currentWeatherCard');
+    await ensureActiveCity();
+    function card = document.getElementById('currentWeatherCard');
     const hourlySection = document.getElementById('hourlySection');
     const aqiSection = document.getElementById('compactAqiSection');
     const adviceSection = document.getElementById('smartAdviceSection');
