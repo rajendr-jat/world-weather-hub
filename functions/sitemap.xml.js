@@ -21,14 +21,15 @@ export async function onRequest(context) {
   let cached = await cache.match(request);
   if (cached) return cached;
 
-  const { results } = await env.DB.prepare(
-    `SELECT slug FROM "cities-db"`
-  ).all();
+  try {
+    const { results } = await env.DB.prepare(
+      `SELECT city_slug FROM cities`
+    ).all();
 
-  const slugs = results.map(r => r.slug);
-  const today = new Date().toISOString().split("T")[0];
+    const slugs = results.map(r => r.city_slug);
+    const today = new Date().toISOString().split("T")[0];
 
-  let urls = STATIC_PAGES.map(p => `
+    let urls = STATIC_PAGES.map(p => `
   <url>
     <loc>${SITE}${p.path}</loc>
     <lastmod>${today}</lastmod>
@@ -36,7 +37,7 @@ export async function onRequest(context) {
     <priority>${p.priority}</priority>
   </url>`).join("");
 
-  urls += slugs.map(slug => `
+    urls += slugs.map(slug => `
   <url>
     <loc>${SITE}/weather/${slug}/</loc>
     <lastmod>${today}</lastmod>
@@ -44,17 +45,20 @@ export async function onRequest(context) {
     <priority>0.8</priority>
   </url>`).join("");
 
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls}
 </urlset>`;
 
-  const response = new Response(xml, {
-    headers: {
-      "Content-Type": "application/xml; charset=UTF-8",
-      "Cache-Control": "public, max-age=3600"
-    }
-  });
+    const response = new Response(xml, {
+      headers: {
+        "Content-Type": "application/xml; charset=UTF-8",
+        "Cache-Control": "public, max-age=3600"
+      }
+    });
 
-  context.waitUntil(cache.put(request, response.clone()));
-  return response;
+    context.waitUntil(cache.put(request, response.clone()));
+    return response;
+  } catch (err) {
+    return new Response("Sitemap generation failed", { status: 500 });
+  }
 }
