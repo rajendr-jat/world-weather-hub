@@ -1,6 +1,7 @@
 let forecastChartInst = null;
 
 async function initAqi() {
+    await ensureActiveCity();
     const cityName = localStorage.getItem('userCity') || "New Delhi, India";
     const cityEl = document.getElementById('aqiCityName');
     if(cityEl) cityEl.innerText = cityName;
