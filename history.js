@@ -2,6 +2,7 @@ let tempChartInst = null;
 let rainChartInst = null;
 
 async function initHistory() {
+    await ensureActiveCity();
     const cityName = localStorage.getItem('userCity') || "New Delhi, India";
     const titleEl = document.getElementById('historyCityTitle');
     if(titleEl) titleEl.innerText = cityName;
