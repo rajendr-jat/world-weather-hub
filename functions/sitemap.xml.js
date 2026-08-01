@@ -6,12 +6,7 @@ const STATIC_PAGES = [
   { path: "/forecast.html", priority: "0.9", changefreq: "hourly" },
   { path: "/aqi.html", priority: "0.9", changefreq: "hourly" },
   { path: "/history.html", priority: "0.7", changefreq: "daily" },
-  { path: "/about.html", priority: "0.5", changefreq: "monthly" },
-  { path: "/contact.html", priority: "0.5", changefreq: "monthly" },
-  { path: "/privacy.html", priority: "0.3", changefreq: "yearly" },
-  { path: "/terms.html", priority: "0.3", changefreq: "yearly" },
-  { path: "/disclaimer.html", priority: "0.3", changefreq: "yearly" },
-  { path: "/cookie.html", priority: "0.3", changefreq: "yearly" }
+  
 ];
 
 export async function onRequest(context) {
