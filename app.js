@@ -1,4 +1,4 @@
-let card hourlyChartInstance = null;
+let hourlyChartInstance = null;
 
 async function initHome() {
     await ensureActiveCity();
