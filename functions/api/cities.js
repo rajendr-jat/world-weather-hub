@@ -17,22 +17,22 @@ export async function onRequest(context) {
 
   try {
     const { results } = await env.DB.prepare(
-      `SELECT slug, name, state, country, lat, lon
-       FROM "cities-db"
-       WHERE name LIKE ?
+      `SELECT city_slug, city_name, country_code, lat, lon
+       FROM cities
+       WHERE city_name LIKE ?
        ORDER BY
-         CASE WHEN name LIKE ? THEN 0 ELSE 1 END,
-         name ASC
+         CASE WHEN city_name LIKE ? THEN 0 ELSE 1 END,
+         city_name ASC
        LIMIT 6`
     ).bind(`%${q}%`, `${q}%`).all();
 
     const shaped = results.map(r => ({
-      n: r.name,
-      st: r.state,
-      c: r.country,
+      n: r.city_name,
+      st: null,
+      c: r.country_code,
       lat: r.lat,
       lon: r.lon,
-      s: r.slug
+      s: r.city_slug
     }));
 
     const response = Response.json(shaped, {
