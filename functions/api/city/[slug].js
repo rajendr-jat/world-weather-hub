@@ -11,7 +11,7 @@ export async function onRequest(context) {
 
   try {
     const city = await env.DB.prepare(
-      `SELECT slug, name, state, country, lat, lon FROM "cities-db" WHERE slug = ?`
+      `SELECT city_slug, city_name, country_code, lat, lon FROM cities WHERE city_slug = ?`
     ).bind(slug).first();
 
     if (!city) {
@@ -19,10 +19,10 @@ export async function onRequest(context) {
     }
 
     const shaped = {
-      s: city.slug,
-      n: city.name,
-      st: city.state,
-      c: city.country,
+      s: city.city_slug,
+      n: city.city_name,
+      st: null,
+      c: city.country_code,
       lat: city.lat,
       lon: city.lon
     };
