@@ -1,4 +1,5 @@
 async function initForecast() {
+    await ensureActiveCity();
     const container = document.getElementById('sixteenDayList');
     const cityTitle = document.getElementById('forecastCityTitle');
     const loader = document.getElementById('forecastLoader');
