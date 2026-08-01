@@ -1,8 +1,8 @@
 const WEATHER_API = "https://api.open-meteo.com/v1/forecast";
 const AQI_API = "https://air-quality-api.open-meteo.com/v1/air-quality";
 
-// URL से शहर पहचानने वाला फंक्शन
-function resolveCurrentCity() {
+// URL से शहर पहचानने वाला फंक्शन (अब D1 से, cities.js से नहीं)
+async function resolveCurrentCity() {
     try {
         const path = window.location.pathname;
         let slug = null;
@@ -11,32 +11,31 @@ function resolveCurrentCity() {
             slug = path.split('/')[2];
         }
 
-        if (slug && typeof CITIES_DATA !== 'undefined') {
-            const cityData = CITIES_DATA.find(c => c.s === slug);
-            if (cityData) {
-                const fullLocation = cityData.st ? `${cityData.n}, ${cityData.st}, ${cityData.c}` : `${cityData.n}, ${cityData.c}`;
+        if (slug) {
+            try {
+                const res = await fetch(`/api/city/${slug}`);
+                if (res.ok) {
+                    const cityData = await res.json();
+                    const fullLocation = cityData.st
+                        ? `${cityData.n}, ${cityData.st}, ${cityData.c}`
+                        : `${cityData.n}, ${cityData.c}`;
 
-                // LocalStorage अपडेट करें ताकि दूसरे टैब्स (Forecast, AQI) पर भी यही डेटा दिखे।
-                // NOTE: localStorage.setItem कभी-कभी (private/incognito mode, browser privacy
-                // settings, .pages.dev जैसी shared-suffix domains पर storage partitioning आदि)
-                // throw कर सकता है। पहले यहां try/catch नहीं था, इसलिए setItem fail होते ही
-                // पूरा api.js टूट जाता, ACTIVE_CITY कभी set नहीं होता, और आगे getLat()/getLon()
-                // call होते ही ReferenceError आता — जिससे "Loading local weather..." spinner
-                // हमेशा के लिए अटका रहता (सिर्फ /weather/<city>/ URLs पर, क्योंकि सिर्फ वहीं
-                // setItem call होता है; root "/" पर सिर्फ getItem होता है, इसलिए वो बच जाता था)।
-                try {
-                    localStorage.setItem('userCity', fullLocation);
-                    localStorage.setItem('userLat', cityData.lat);
-                    localStorage.setItem('userLon', cityData.lon);
-                } catch (storageErr) {
-                    console.warn('localStorage write failed, continuing without persistence:', storageErr);
+                    try {
+                        localStorage.setItem('userCity', fullLocation);
+                        localStorage.setItem('userLat', cityData.lat);
+                        localStorage.setItem('userLon', cityData.lon);
+                    } catch (storageErr) {
+                        console.warn('localStorage write failed, continuing without persistence:', storageErr);
+                    }
+
+                    return { lat: cityData.lat, lon: cityData.lon, name: fullLocation };
                 }
-
-                return { lat: cityData.lat, lon: cityData.lon, name: fullLocation };
+            } catch (fetchErr) {
+                console.warn('D1 city lookup failed, falling back to localStorage:', fetchErr);
             }
         }
 
-        // अगर URL में शहर नहीं है, तो पुराना LocalStorage वाला तरीका यूज़ करें
+        // अगर URL में शहर नहीं है या D1 lookup fail हुआ, तो localStorage वाला तरीका यूज़ करें
         let savedLat, savedLon, savedCity;
         try {
             savedLat = localStorage.getItem('userLat');
@@ -52,18 +51,30 @@ function resolveCurrentCity() {
             name: savedCity || "New Delhi, India"
         };
     } catch (err) {
-        // कोई भी अनदेखी गलती हो, फिर भी एक valid object हमेशा लौटाएं ताकि
-        // ACTIVE_CITY कभी undefined/unresolved ना रहे और पूरी site हैंग ना हो।
         console.error('resolveCurrentCity failed, falling back to default city:', err);
         return { lat: 28.6139, lon: 77.2090, name: "New Delhi, India" };
     }
 }
 
-const ACTIVE_CITY = resolveCurrentCity();
+// ACTIVE_CITY ab turant available nahi hota (async D1 call ki wajah se).
+// Har page ke init function (initHome/initAqi/initForecast/initHistory) ke
+// SABSE PEHLE 'await ensureActiveCity();' call karna zaroori hai — tumne wo daal diya hai.
+let ACTIVE_CITY = null;
+let _activeCityPromise = null;
+
+function ensureActiveCity() {
+    if (!_activeCityPromise) {
+        _activeCityPromise = resolveCurrentCity().then(city => {
+            ACTIVE_CITY = city;
+            return city;
+        });
+    }
+    return _activeCityPromise;
+}
 
 // Location Functions
-function getLat() { return ACTIVE_CITY.lat; }
-function getLon() { return ACTIVE_CITY.lon; }
+function getLat() { return ACTIVE_CITY ? ACTIVE_CITY.lat : 28.6139; }
+function getLon() { return ACTIVE_CITY ? ACTIVE_CITY.lon : 77.2090; }
 
 async function getWeatherData(lat = getLat(), lon = getLon()) {
     const url = `${WEATHER_API}?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,cloud_cover,wind_speed_10m&hourly=temperature_2m,weather_code,precipitation_probability,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_sum,precipitation_probability_max,wind_speed_10m_max,wind_direction_10m_dominant,shortwave_radiation_sum&timezone=auto&forecast_days=16`;
@@ -113,12 +124,12 @@ function getAqiStatus(aqi) {
 }
 
 function getAqiColor(aqi) {
-    if (aqi <= 50) return "#34a853"; 
-    if (aqi <= 100) return "#fbbc04"; 
-    if (aqi <= 150) return "#fa7b17"; 
-    if (aqi <= 200) return "#ea4335"; 
-    if (aqi <= 300) return "#a142f4"; 
-    return "#800000"; 
+    if (aqi <= 50) return "#34a853";
+    if (aqi <= 100) return "#fbbc04";
+    if (aqi <= 150) return "#fa7b17";
+    if (aqi <= 200) return "#ea4335";
+    if (aqi <= 300) return "#a142f4";
+    return "#800000";
 }
 
 function getWindDirection(degree) {
