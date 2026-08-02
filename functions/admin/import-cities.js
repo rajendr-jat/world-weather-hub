@@ -1,42 +1,18 @@
 // functions/admin/import-cities.js
-const SECRET_KEY = "mypass2026"; // apna word rakho
+// Route: /admin/import-cities?cc=in&offset=0&limit=1000&key=YOUR_SECRET
+//
+// Fetches cities for ONE country at a time from a public JSON API and inserts
+// them into D1. Much lighter/more reliable than parsing a giant CSV.
+//
+// USAGE:
+//   India:  ?cc=in&offset=0&limit=1000&key=YOUR_SECRET
+//   USA:    ?cc=us&offset=0&limit=1000&key=YOUR_SECRET
+//   Any other country: change cc= to that country's 2-letter code (gb, ca, au, etc.)
+//
+// Follow the "nextUrl" in each response until "done": true.
+// DELETE this file once you're done importing (security).
 
-const CSV_URL = "https://raw.githubusercontent.com/dr5hn/countries-states-cities-database/master/csv/cities.csv";
-
-// Kitni cities chahiye har category me
-const TARGETS = {
-  in: 20000,   // India
-  us: 10000,   // USA
-  other: 10000 // Baaki sab desh (India, US chhod kar)
-};
-
-function slugify(name, countryCode) {
-  const base = name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-  return `${base}-${countryCode.toLowerCase()}`;
-}
-
-function parseCSVLine(line) {
-  const result = [];
-  let cur = "";
-  let inQuotes = false;
-  for (let i = 0; i < line.length; i++) {
-    const ch = line[i];
-    if (inQuotes) {
-      if (ch === '"' && line[i + 1] === '"') { cur += '"'; i++; }
-      else if (ch === '"') { inQuotes = false; }
-      else { cur += ch; }
-    } else {
-      if (ch === '"') inQuotes = true;
-      else if (ch === ',') { result.push(cur); cur = ""; }
-      else cur += ch;
-    }
-  }
-  result.push(cur);
-  return result;
-}
+const SECRET_KEY = "mypass2026"; // <-- change this to your own secret
 
 export async function onRequest(context) {
   const { env, request } = context;
@@ -46,70 +22,53 @@ export async function onRequest(context) {
     return new Response("Unauthorized. Add ?key=YOUR_SECRET to the URL.", { status: 401 });
   }
 
-  const mode = (url.searchParams.get("mode") || "in").toLowerCase(); // in, us, or other
+  const cc = (url.searchParams.get("cc") || "in").toLowerCase();
   const offset = parseInt(url.searchParams.get("offset") || "0", 10);
   const limit = Math.min(parseInt(url.searchParams.get("limit") || "1000", 10), 1000);
-  const target = TARGETS[mode] ?? 10000;
+  const maxTotal = parseInt(url.searchParams.get("max") || "999999", 10); // optional cap
+
+  function slugify(name) {
+    const base = name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    return `${base}-${cc}`;
+  }
 
   try {
-    const res = await fetch(CSV_URL);
+    const apiUrl = `https://cdn.jsdelivr.net/npm/geo-data-api@latest/dist/api/v1/cities/country/${cc}.json`;
+    const res = await fetch(apiUrl);
     if (!res.ok) {
-      return Response.json({ error: "Could not fetch source CSV", status: res.status }, { status: 500 });
+      return Response.json({ error: "Could not fetch city data for this country code", cc, status: res.status }, { status: 500 });
     }
-    const text = await res.text();
-    const lines = text.split("\n").filter(l => l.trim().length > 0);
+    const json = await res.json();
+    const allCities = json.data || [];
+    const totalAvailable = allCities.length;
+    const cappedTotal = Math.min(totalAvailable, maxTotal);
 
-    const header = parseCSVLine(lines[0]);
-    const idxName = header.indexOf("name");
-    const idxCountryCode = header.indexOf("country_code");
-    const idxLat = header.indexOf("latitude");
-    const idxLon = header.indexOf("longitude");
+    const batch = allCities.slice(offset, Math.min(offset + limit, cappedTotal));
 
-    const dataLines = lines.slice(1);
-
-    // Country ke hisaab se filter karo
-    const filtered = dataLines.filter(line => {
-      const cols = parseCSVLine(line);
-      const cc = (cols[idxCountryCode] || "").toLowerCase();
-      if (mode === "in") return cc === "in";
-      if (mode === "us") return cc === "us";
-      return cc !== "in" && cc !== "us"; // "other"
-    });
-
-    const totalRows = filtered.length;
-    const cappedTotal = Math.min(totalRows, target);
-    const batchLines = filtered.slice(offset, Math.min(offset + limit, cappedTotal));
-
-    if (batchLines.length === 0) {
-      return Response.json({ done: true, mode, totalAvailable: totalRows, target, message: "Target reached or no more rows." });
+    if (batch.length === 0) {
+      return Response.json({ done: true, cc, totalAvailable, message: "No more rows to import for this country." });
     }
 
-    const rows = batchLines.map(line => {
-      const cols = parseCSVLine(line);
-      const name = cols[idxName];
-      const country = cols[idxCountryCode];
-      const lat = parseFloat(cols[idxLat]);
-      const lon = parseFloat(cols[idxLon]);
-      if (!name || !country || isNaN(lat) || isNaN(lon)) return null;
-      return {
-        name,
-        country: country.toLowerCase(),
-        lat,
-        lon,
-        slug: slugify(name, country)
-      };
+    const rows = batch.map(c => {
+      const lat = parseFloat(c.latitude);
+      const lon = parseFloat(c.longitude);
+      if (!c.name || isNaN(lat) || isNaN(lon)) return null;
+      return { name: c.name, lat, lon, slug: slugify(c.name) };
     }).filter(Boolean);
 
     const CHUNK = 20;
     let inserted = 0;
     for (let i = 0; i < rows.length; i += CHUNK) {
       const chunk = rows.slice(i, i + CHUNK);
-      const batchStmts = chunk.map(r =>
+      const stmts = chunk.map(r =>
         env.DB.prepare(
           `INSERT OR IGNORE INTO cities (city_name, city_slug, country_code, lat, lon) VALUES (?, ?, ?, ?, ?)`
-        ).bind(r.name, r.slug, r.country, r.lat, r.lon)
+        ).bind(r.name, r.slug, cc, r.lat, r.lon)
       );
-      await env.DB.batch(batchStmts);
+      await env.DB.batch(stmts);
       inserted += chunk.length;
     }
 
@@ -118,13 +77,12 @@ export async function onRequest(context) {
 
     return Response.json({
       done,
-      mode,
+      cc,
       offset,
       inserted,
-      target,
-      totalAvailable: totalRows,
+      totalAvailable,
       nextOffset: done ? null : nextOffset,
-      nextUrl: done ? null : `${url.origin}${url.pathname}?mode=${mode}&offset=${nextOffset}&limit=${limit}&key=${SECRET_KEY}`
+      nextUrl: done ? null : `${url.origin}${url.pathname}?cc=${cc}&offset=${nextOffset}&limit=${limit}&max=${maxTotal}&key=${SECRET_KEY}`
     });
   } catch (err) {
     return Response.json({ error: err.message }, { status: 500 });
