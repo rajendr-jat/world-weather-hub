@@ -17,7 +17,7 @@ export async function onRequest(context) {
 
   try {
     const { results } = await env.DB.prepare(
-      `SELECT city_slug, city_name, country_code, lat, lon
+      `SELECT city_slug, city_name, state, country_code, lat, lon
        FROM cities
        WHERE city_name LIKE ?
        ORDER BY
@@ -28,7 +28,7 @@ export async function onRequest(context) {
 
     const shaped = results.map(r => ({
       n: r.city_name,
-      st: null,
+      st: r.state,
       c: r.country_code,
       lat: r.lat,
       lon: r.lon,
