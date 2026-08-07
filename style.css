@@ -17,7 +17,7 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
 .tab-btn { flex: 1; background: transparent; border: none; padding: 8px 0; border-radius: 10px; font-size: 14px; font-weight: 600; color: #5f6368; text-decoration: none; text-align: center; }
 .tab-btn.active { background-color: #e8f0fe; color: #1a73e8; }
 .weather-hero-card { background: linear-gradient(135deg, #1b4f72 0%, #2e86c1 50%, #5dade2 100%); border-radius: 20px; color: #ffffff; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.12); margin-bottom:10px; }
-.weather-content { padding: 20px; background: url('https://images.unsplash.com/photo-1514565131-fce0801e5785?q=80&w=1000&auto=format&fit=crop') center/cover no-repeat; background-blend-mode: overlay; background-color: rgba(15, 32, 67, 0.45); }
+.weather-content { padding: 20px; background: linear-gradient(135deg, #4a90d9 0%, #6fb1e8 50%, #8ec9f0 100%); }
 .location-info { display: flex; align-items: center; gap: 6px; font-size: 20px; font-weight: 600; }
 .temp-display { display: flex; align-items: flex-start; margin: 6px 0; }
 .temp-value { font-size: 64px; font-weight: 700; line-height: 1; }
