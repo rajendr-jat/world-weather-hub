@@ -9,6 +9,12 @@ class TitleRewriter {
     element.setInnerContent(`${this.cityLabel} Weather Today - Live Forecast & AQI | World Weather Hub`);
   }
 }
+class CanonicalRewriter {
+  constructor(slug) { this.slug = slug; }
+  element(element) {
+    element.setAttribute("href", `https://world-weather-hub.pages.dev/weather/${this.slug}/`);
+  }
+}
 
 class MetaDescRewriter {
   constructor(cityLabel) { this.cityLabel = cityLabel; }
@@ -109,7 +115,8 @@ export async function onRequest(context) {
     .on("title", new TitleRewriter(cityLabel))
     .on('meta[name="description"]', new MetaDescRewriter(cityLabel))
     .on("h1", new IntroParagraphRewriter(cityLabel))
-    .on("head", new StructuredDataInjector(cityData, request.url));
+    .on('link[rel="canonical"]', new CanonicalRewriter(slug));
+    
 
   return rewriter.transform(res);
 }
