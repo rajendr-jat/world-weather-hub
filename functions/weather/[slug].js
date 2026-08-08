@@ -110,13 +110,13 @@ export async function onRequest(context) {
   const indexUrl = new URL("/", request.url);
   const res = await env.ASSETS.fetch(new Request(indexUrl, request));
 
-  // 3. Rewrite <title>, meta description, inject intro paragraph + structured data
+    // 3. Rewrite <title>, meta description, inject intro paragraph + structured data
   const rewriter = new HTMLRewriter()
     .on("title", new TitleRewriter(cityLabel))
     .on('meta[name="description"]', new MetaDescRewriter(cityLabel))
     .on("h1", new IntroParagraphRewriter(cityLabel))
-    .on('link[rel="canonical"]', new CanonicalRewriter(slug));
-    
+    .on('link[rel="canonical"]', new CanonicalRewriter(slug))
+    .on("head", new StructuredDataInjector(cityData, `https://world-weather-hub.pages.dev/weather/${slug}/`));
 
   return rewriter.transform(res);
 }
