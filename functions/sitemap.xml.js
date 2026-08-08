@@ -3,10 +3,9 @@ const SITE = "https://world-weather-hub.pages.dev";
 
 const STATIC_PAGES = [
   { path: "/", priority: "1.0", changefreq: "hourly" },
-  { path: "/forecast.html", priority: "0.9", changefreq: "hourly" },
-  { path: "/aqi.html", priority: "0.9", changefreq: "hourly" },
-  { path: "/history.html", priority: "0.7", changefreq: "daily" },
-  
+  { path: "/forecast", priority: "0.9", changefreq: "hourly" },
+  { path: "/aqi", priority: "0.9", changefreq: "hourly" },
+  { path: "/history", priority: "0.7", changefreq: "daily" }
 ];
 
 export async function onRequest(context) {
