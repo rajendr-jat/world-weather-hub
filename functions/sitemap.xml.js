@@ -1,23 +1,12 @@
 const SITE = "https://world-weather-hub.pages.dev";
 
-const STATIC_PAGES = [
-  { path: "/", priority: "1.0", changefreq: "hourly" },
-  { path: "/forecast", priority: "0.9", changefreq: "hourly" },
-  { path: "/aqi", priority: "0.9", changefreq: "hourly" },
-  { path: "/history", priority: "0.7", changefreq: "daily" }
-];
-
 export async function onRequest(context) {
-  const { request } = context;
-
-  const urls = STATIC_PAGES.map(p => `
-  <url>
-    <loc>${SITE}${p.path}</loc>
-    <changefreq>${p.changefreq}</changefreq>
-    <priority>${p.priority}</priority>
-  </url>`).join("");
-
   const sitemapLinks = [];
+
+  sitemapLinks.push(`
+  <sitemap>
+    <loc>${SITE}/sitemap-static.xml</loc>
+  </sitemap>`);
 
   for (let page = 1; page <= 9; page++) {
     sitemapLinks.push(`
