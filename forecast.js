@@ -85,7 +85,7 @@ async function initForecast() {
                     </div>
                 `);
             }
-        } elelse
+        } else
             container.innerHTML = '<div style="text-align:center; padding: 20px; color: #ea4335;">Failed to load forecast data from API. Please try again later.</div>';
         }
     } catch (error) {
