@@ -62,7 +62,7 @@ async function resolveCurrentCity() {
 let ACTIVE_CITY = null;
 let _activeCityPromise = null;
 
-function ensureActiveCity() {
+
 function ensureActiveCity() {
     if (!_activeCityPromise) {
         _activeCityPromise = resolveCurrentCity().then(city => {
