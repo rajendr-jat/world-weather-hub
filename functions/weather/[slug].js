@@ -84,25 +84,30 @@ export async function onRequest(context) {
   const slug = params.slug;
 
   // 1. Look up the city's display name from D1
-  let cityLabel = "Local"; // fallback if not found
-  let cityData = { name: "Local", state: null, country: "IN", lat: 0, lon: 0 };
+  let city;
   try {
-    const city = await env.DB.prepare(
+    city = await env.DB.prepare(
       `SELECT city_name, state, country_code, lat, lon FROM cities WHERE city_slug = ?`
     ).bind(slug).first();
-    if (city) {
-      cityLabel = city.state
-        ? `${city.city_name}, ${city.state}`
-        : `${city.city_name}, ${city.country_code.toUpperCase()}`;
-      cityData = {
-        name: city.city_name,
-        state: city.state,
-        country: city.country_code.toUpperCase(),
-        lat: city.lat,
-        lon: city.lon
-      };
-    }
   } catch (err) {
+    return new Response("Internal error looking up city", { status: 500 });
+  }
+
+  if (!city) {
+    return new Response("City not found", { status: 404 });
+  }
+
+  const cityLabel = city.state
+    ? `${city.city_name}, ${city.state}`
+    : `${city.city_name}, ${city.country_code.toUpperCase()}`;
+  const cityData = {
+    name: city.city_name,
+    state: city.state,
+    country: city.country_code.toUpperCase(),
+    lat: city.lat,
+    lon: city.lon
+  };
+  {
     // if lookup fails, just fall back to generic label, don't break the page
   }
 
