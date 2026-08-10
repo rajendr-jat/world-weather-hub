@@ -63,9 +63,11 @@ let ACTIVE_CITY = null;
 let _activeCityPromise = null;
 
 function ensureActiveCity() {
+function ensureActiveCity() {
     if (!_activeCityPromise) {
         _activeCityPromise = resolveCurrentCity().then(city => {
             ACTIVE_CITY = city;
+            window.ACTIVE_CITY = city;
             return city;
         });
     }
