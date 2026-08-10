@@ -94,8 +94,12 @@ document.addEventListener("DOMContentLoaded", () => {
                             console.warn('localStorage write failed:', storageErr);
                         }
 
-                        // Hamesha home page par data load karein taaki 404 error na aaye
-                        if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
+                        // Agar ye local database wali city hai (slug maujood hai),
+                        // to seedha uske apne /weather/[slug]/ page par bhejein.
+                        // Isse Google ko internal link mil jaata hai un pages tak.
+                        if (city.isLocal && city.slug) {
+                            window.location.href = `/weather/${city.slug}/`;
+                        } else if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
                             window.location.reload();
                         } else {
                             window.location.href = '/';
