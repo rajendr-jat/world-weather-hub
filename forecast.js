@@ -8,15 +8,14 @@ async function initForecast() {
     if (!container) return;
 
         if (window.ACTIVE_CITY) {
-        if (cityTitle) cityTitle.innerText = window.ACTIVE_CITY.city_name;
-        localStorage.setItem('userCity', window.ACTIVE_CITY.city_name);
+        if (cityTitle) cityTitle.innerText = window.ACTIVE_CITY.name;
+        localStorage.setItem('userCity', window.ACTIVE_CITY.name);
         if (window.ACTIVE_CITY.lat) localStorage.setItem('userLat', window.ACTIVE_CITY.lat);
         if (window.ACTIVE_CITY.lon) localStorage.setItem('userLon', window.ACTIVE_CITY.lon);
     } else {
         if(cityTitle) cityTitle.innerText = localStorage.getItem('userCity') || "New Delhi, India";
-        }
-
-    try {
+        }   
+        try {
         const data = await getWeatherData();
 
         if(loader) loader.style.display = 'none';
@@ -61,10 +60,10 @@ async function initForecast() {
                                 <span class="day-date">${dayDate}</span>
                             </div>
                             <div class="icon-col">
-                                <i class="fa-solid ${iconClass}"></i>
+                                <i class="fafa-solid{iconClass}"></i>
                             </div>
                             <div class="conditions-col">
-                                <span><i class="fa-solid fa-droplet text-info"></i> ${rainProb}%</span>
+                                <span><i class="fa-solid fa-droplet text-info"></i>i${rainProb}%</span>
                                 <span><i class="fa-solid fa-wind text-secondary"></i> ${windSpeed} km/h ${windDirTxt}</span>
                             </div>
                             <div class="temp-col">
@@ -86,7 +85,7 @@ async function initForecast() {
                     </div>
                 `);
             }
-        } else {
+        } elelse
             container.innerHTML = '<div style="text-align:center; padding: 20px; color: #ea4335;">Failed to load forecast data from API. Please try again later.</div>';
         }
     } catch (error) {
