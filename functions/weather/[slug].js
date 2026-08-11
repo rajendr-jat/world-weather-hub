@@ -79,11 +79,32 @@ class StructuredDataInjector {
   }
 }
 
+// Naya: city ka lat/lon/name page ke HTML mein pehle se hi daal dete hain,
+// taaki JS ko dobara /api/city/[slug] call na karni pade — isse ek poori
+// network request kam ho jaati hai, aur Googlebot ke limited crawl-time
+// budget mein weather data render hone ke chances badh jaate hain.
+class PreloadedCityInjector {
+  constructor(cityData, slug) { this.cityData = cityData; this.slug = slug; }
+  element(element) {
+    const payload = {
+      lat: this.cityData.lat,
+      lon: this.cityData.lon,
+      name: this.cityData.state
+        ? `${this.cityData.name}, ${this.cityData.state}, ${this.cityData.country}`
+        : `${this.cityData.name}, ${this.cityData.country}`,
+      slug: this.slug
+    };
+    element.append(
+      `<script>window.__PRELOADED_CITY__ = ${JSON.stringify(payload)};</script>`,
+      { html: true }
+    );
+  }
+}
+
 export async function onRequest(context) {
   const { env, params, request } = context;
   const slug = params.slug;
 
-  // 1. Look up the city's display name from D1
   let city;
   try {
     city = await env.DB.prepare(
@@ -107,21 +128,19 @@ export async function onRequest(context) {
     lat: city.lat,
     lon: city.lon
   };
-  {
-    // if lookup fails, just fall back to generic label, don't break the page
-  }
 
-  // 2. Fetch the normal index.html from static assets
+  // Fetch the normal index.html from static assets
   const indexUrl = new URL("/", request.url);
   const res = await env.ASSETS.fetch(new Request(indexUrl, request));
 
-    // 3. Rewrite <title>, meta description, inject intro paragraph + structured data
+  // Rewrite <title>, meta description, inject intro paragraph + structured data + preloaded city data
   const rewriter = new HTMLRewriter()
     .on("title", new TitleRewriter(cityLabel))
     .on('meta[name="description"]', new MetaDescRewriter(cityLabel))
     .on("h1", new IntroParagraphRewriter(cityLabel))
     .on('link[rel="canonical"]', new CanonicalRewriter(slug))
-    .on("head", new StructuredDataInjector(cityData, `https://world-weather-hub.pages.dev/weather/${slug}/`));
+    .on("head", new StructuredDataInjector(cityData, `https://world-weather-hub.pages.dev/weather/${slug}/`))
+    .on("head", new PreloadedCityInjector(cityData, slug));
 
   return rewriter.transform(res);
 }
