@@ -1,9 +1,32 @@
 const WEATHER_API = "https://api.open-meteo.com/v1/forecast";
 const AQI_API = "https://air-quality-api.open-meteo.com/v1/air-quality";
 
+// Helper: timeout ke saath fetch, taaki Googlebot ka limited crawl-time
+// budget waste na ho agar external API slow ho ya atak jaaye
+function fetchWithTimeout(url, ms = 6000) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), ms);
+    return fetch(url, { signal: controller.signal }).finally(() => clearTimeout(timer));
+}
+
 // URL से शहर पहचानने वाला फंक्शन (अब D1 से, cities.js से नहीं)
 async function resolveCurrentCity() {
     try {
+        // Agar server-side (weather/[slug].js) ne pehle se city data
+        // page ke HTML mein daal diya hai, to seedha wahi use karein —
+        // isse ek poori network request bach jaati hai.
+        if (window.__PRELOADED_CITY__) {
+            const preloaded = window.__PRELOADED_CITY__;
+            try {
+                localStorage.setItem('userCity', preloaded.name);
+                localStorage.setItem('userLat', preloaded.lat);
+                localStorage.setItem('userLon', preloaded.lon);
+            } catch (storageErr) {
+                console.warn('localStorage write failed, continuing without persistence:', storageErr);
+            }
+            return { lat: preloaded.lat, lon: preloaded.lon, name: preloaded.name };
+        }
+
         const path = window.location.pathname;
         let slug = null;
 
@@ -13,7 +36,7 @@ async function resolveCurrentCity() {
 
         if (slug) {
             try {
-                const res = await fetch(`/api/city/${slug}`);
+                const res = await fetchWithTimeout(`/api/city/${slug}`, 4000);
                 if (res.ok) {
                     const cityData = await res.json();
                     const fullLocation = cityData.st
@@ -80,7 +103,7 @@ function getLon() { return ACTIVE_CITY ? ACTIVE_CITY.lon : 77.2090; }
 async function getWeatherData(lat = getLat(), lon = getLon()) {
     const url = `${WEATHER_API}?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,cloud_cover,wind_speed_10m&hourly=temperature_2m,weather_code,precipitation_probability,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_sum,precipitation_probability_max,wind_speed_10m_max,wind_direction_10m_dominant,shortwave_radiation_sum&timezone=auto&forecast_days=16`;
     try {
-        const response = await fetch(url);
+        const response = await fetchWithTimeout(url, 6000);
         if (!response.ok) throw new Error("Network response was not ok");
         return await response.json();
     } catch (error) { return null; }
@@ -89,7 +112,7 @@ async function getWeatherData(lat = getLat(), lon = getLon()) {
 async function getAirQualityData(lat = getLat(), lon = getLon()) {
     const url = `${AQI_API}?latitude=${lat}&longitude=${lon}&current=us_aqi,pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone&hourly=us_aqi&timezone=auto&forecast_days=3`;
     try {
-        const response = await fetch(url);
+        const response = await fetchWithTimeout(url, 6000);
         if (!response.ok) throw new Error("Network response was not ok");
         return await response.json();
     } catch (error) { return null; }
