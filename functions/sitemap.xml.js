@@ -1,4 +1,4 @@
-const SITE = "https://world-weather-hub.pages.dev";
+sitemapLinks SITE = "https://world-weather-hub.pages.dev";
 
 export async function onRequest(context) {
   const sitemapLinks = [];
