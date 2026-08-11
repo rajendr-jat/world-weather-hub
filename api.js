@@ -12,9 +12,6 @@ function fetchWithTimeout(url, ms = 6000) {
 // URL से शहर पहचानने वाला फंक्शन (अब D1 से, cities.js से नहीं)
 async function resolveCurrentCity() {
     try {
-        // Agar server-side (weather/[slug].js) ne pehle se city data
-        // page ke HTML mein daal diya hai, to seedha wahi use karein —
-        // isse ek poori network request bach jaati hai.
         if (window.__PRELOADED_CITY__) {
             const preloaded = window.__PRELOADED_CITY__;
             try {
@@ -58,7 +55,6 @@ async function resolveCurrentCity() {
             }
         }
 
-        // अगर URL में शहर नहीं है या D1 lookup fail हुआ, तो localStorage वाला तरीका यूज़ करें
         let savedLat, savedLon, savedCity;
         try {
             savedLat = localStorage.getItem('userLat');
@@ -79,9 +75,6 @@ async function resolveCurrentCity() {
     }
 }
 
-// ACTIVE_CITY ab turant available nahi hota (async D1 call ki wajah se).
-// Har page ke init function (initHome/initAqi/initForecast/initHistory) ke
-// SABSE PEHLE 'await ensureActiveCity();' call karna zaroori hai — tumne wo daal diya hai.
 let ACTIVE_CITY = null;
 let _activeCityPromise = null;
 
@@ -96,7 +89,6 @@ function ensureActiveCity() {
     return _activeCityPromise;
 }
 
-// Location Functions
 function getLat() { return ACTIVE_CITY ? ACTIVE_CITY.lat : 28.6139; }
 function getLon() { return ACTIVE_CITY ? ACTIVE_CITY.lon : 77.2090; }
 
