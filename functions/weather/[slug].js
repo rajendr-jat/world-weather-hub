@@ -1,7 +1,7 @@
 // functions/weather/[slug].js
 // Route: /weather/<slug>/  ->  serves index.html but with a UNIQUE title & meta
-// description for each city (pulled from D1), so Google sees different content
-// on every city page instead of one generic template.
+// description for each city (pulled from D1), plus server-side pre-rendered
+// weather data so Googlebot sees real content even without JS running.
 
 class TitleRewriter {
   constructor(cityLabel) { this.cityLabel = cityLabel; }
@@ -26,7 +26,6 @@ class MetaDescRewriter {
   }
 }
 
-// Adds a small unique paragraph right after <h1> so the page isn't 100% identical HTML either
 class IntroParagraphRewriter {
   constructor(cityLabel) { this.cityLabel = cityLabel; }
   element(element) {
@@ -40,7 +39,6 @@ class IntroParagraphRewriter {
   }
 }
 
-// Injects JSON-LD structured data (Place + BreadcrumbList) into <head>
 class StructuredDataInjector {
   constructor(cityData, pageUrl) { this.cityData = cityData; this.pageUrl = pageUrl; }
   element(element) {
@@ -79,10 +77,6 @@ class StructuredDataInjector {
   }
 }
 
-// Naya: city ka lat/lon/name page ke HTML mein pehle se hi daal dete hain,
-// taaki JS ko dobara /api/city/[slug] call na karni pade — isse ek poori
-// network request kam ho jaati hai, aur Googlebot ke limited crawl-time
-// budget mein weather data render hone ke chances badh jaate hain.
 class PreloadedCityInjector {
   constructor(cityData, slug) { this.cityData = cityData; this.slug = slug; }
   element(element) {
@@ -98,6 +92,92 @@ class PreloadedCityInjector {
       `<script>window.__PRELOADED_CITY__ = ${JSON.stringify(payload)};</script>`,
       { html: true }
     );
+  }
+}
+
+// Naya: server-side fetched weather data ko seedha currentWeatherCard div
+// ke andar HTML ke roop mein bhar dete hain. Isse Googlebot ko bina JS
+// chalaye bhi asli temperature/condition dikh jaata hai. Client-side JS
+// baad mein isko replace/enhance kar dega jab wo load hoga (normal users
+// ke liye), lekin crawler ke paas hamesha kam se kam yeh fallback content
+// maujood rahega.
+function weatherIconClass(code, isDay = 1) {
+  if (code === 0) return isDay ? "fa-sun" : "fa-moon";
+  if (code >= 1 && code <= 3) return isDay ? "fa-cloud-sun" : "fa-cloud-moon";
+  if (code >= 45 && code <= 48) return "fa-smog";
+  if (code >= 51 && code <= 67) return "fa-cloud-rain";
+  if (code >= 71 && code <= 77) return "fa-snowflake";
+  if (code >= 80 && code <= 82) return "fa-cloud-showers-heavy";
+  if (code >= 95) return "fa-cloud-bolt";
+  return "fa-cloud";
+}
+function weatherConditionText(code) {
+  if (code === 0) return "Clear / Sunny";
+  if (code >= 1 && code <= 3) return "Partly Cloudy";
+  if (code >= 45 && code <= 48) return "Foggy";
+  if (code >= 51 && code <= 67) return "Rainy";
+  if (code >= 71 && code <= 77) return "Snowy";
+  if (code >= 80 && code <= 82) return "Showers";
+  if (code >= 95) return "Thunderstorm";
+  return "Cloudy";
+}
+
+class ServerWeatherCardRewriter {
+  constructor(html) { this.html = html; }
+  element(element) {
+    if (this.html) {
+      element.setInnerContent(this.html, { html: true });
+    }
+  }
+}
+
+async function fetchServerWeatherHtml(cityLabel, lat, lon) {
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,cloud_cover,wind_speed_10m&daily=precipitation_probability_max&timezone=auto&forecast_days=1`;
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 4000);
+    const res = await fetch(url, { signal: controller.signal, cf: { cacheTtl: 1800, cacheEverything: true } });
+    clearTimeout(timer);
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data || !data.current) return null;
+
+    const cur = data.current;
+    const rainProb = (data.daily && data.daily.precipitation_probability_max && data.daily.precipitation_probability_max[0]) || 0;
+    const icon = weatherIconClass(cur.weather_code, cur.is_day);
+    const conditionText = weatherConditionText(cur.weather_code);
+
+    return `
+      <div class="weather-content" style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="hero-left">
+          <div class="location-info">
+            <span class="pin-icon">📍</span><h2>${cityLabel}</h2>
+          </div>
+          <div style="margin-top: 14px;">
+            <div class="temp-display">
+              <span class="temp-value">${Math.round(cur.temperature_2m)}</span>
+              <span class="temp-unit">°C</span>
+            </div>
+            <p style="font-size: 14px; opacity: 0.95;">Feels like ${Math.round(cur.apparent_temperature)}°C</p>
+          </div>
+        </div>
+        <div class="hero-right" style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+          <i class="fa-solid ${icon}" style="font-size: 50px; margin-bottom: 8px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));"></i>
+          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 6px;">${conditionText}</h3>
+          <span style="background: rgba(255,255,255,0.25); backdrop-filter: blur(5px); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;">
+            <i class="fa-solid fa-droplet text-info"></i> ${rainProb}% Rain
+          </span>
+        </div>
+      </div>
+      <div class="weather-stats-grid">
+        <div class="stat-item"><i class="fa-solid fa-droplet"></i><span style="opacity:0.8">Humidity</span><b>${cur.relative_humidity_2m}%</b></div>
+        <div class="stat-item"><i class="fa-solid fa-cloud"></i><span style="opacity:0.8">Clouds</span><b>${cur.cloud_cover}%</b></div>
+        <div class="stat-item"><i class="fa-solid fa-wind"></i><span style="opacity:0.8">Wind</span><b>${Math.round(cur.wind_speed_10m)} km/h</b></div>
+        <div class="stat-item"><i class="fa-solid fa-cloud-rain"></i><span style="opacity:0.8">Precip</span><b>${cur.precipitation} mm</b></div>
+      </div>
+    `;
+  } catch (err) {
+    return null;
   }
 }
 
@@ -129,18 +209,20 @@ export async function onRequest(context) {
     lon: city.lon
   };
 
-  // Fetch the normal index.html from static assets
+  // Weather data ko city lookup ke saath hi parallel mein fetch kar lete hain
+  const weatherHtml = await fetchServerWeatherHtml(cityLabel, city.lat, city.lon);
+
   const indexUrl = new URL("/", request.url);
   const res = await env.ASSETS.fetch(new Request(indexUrl, request));
 
-  // Rewrite <title>, meta description, inject intro paragraph + structured data + preloaded city data
   const rewriter = new HTMLRewriter()
     .on("title", new TitleRewriter(cityLabel))
     .on('meta[name="description"]', new MetaDescRewriter(cityLabel))
     .on("h1", new IntroParagraphRewriter(cityLabel))
     .on('link[rel="canonical"]', new CanonicalRewriter(slug))
     .on("head", new StructuredDataInjector(cityData, `https://world-weather-hub.pages.dev/weather/${slug}/`))
-    .on("head", new PreloadedCityInjector(cityData, slug));
+    .on("head", new PreloadedCityInjector(cityData, slug))
+    .on("#currentWeatherCard", new ServerWeatherCardRewriter(weatherHtml));
 
   return rewriter.transform(res);
 }
