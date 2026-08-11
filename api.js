@@ -1,15 +1,12 @@
 const WEATHER_API = "https://api.open-meteo.com/v1/forecast";
 const AQI_API = "https://air-quality-api.open-meteo.com/v1/air-quality";
 
-// Helper: timeout ke saath fetch, taaki Googlebot ka limited crawl-time
-// budget waste na ho agar external API slow ho ya atak jaaye
 function fetchWithTimeout(url, ms = 6000) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), ms);
     return fetch(url, { signal: controller.signal }).finally(() => clearTimeout(timer));
 }
 
-// URL से शहर पहचानने वाला फंक्शन (अब D1 से, cities.js से नहीं)
 async function resolveCurrentCity() {
     try {
         if (window.__PRELOADED_CITY__) {
