@@ -615,3 +615,18 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
 }
 .dropdown-menu a:last-child { border-bottom: none; }
 .dropdown-menu a:hover { background: #f8f9fa; }
+/* Nearby Cities Section */
+.nearby-city-link {
+  background: #f1f3f4;
+  color: #1a73e8;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s ease;
+}
+
+.nearby-city-link:hover {
+  background: #e8f0fe;
+}
