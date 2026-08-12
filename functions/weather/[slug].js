@@ -95,12 +95,6 @@ class PreloadedCityInjector {
   }
 }
 
-// Naya: server-side fetched weather data ko seedha currentWeatherCard div
-// ke andar HTML ke roop mein bhar dete hain. Isse Googlebot ko bina JS
-// chalaye bhi asli temperature/condition dikh jaata hai. Client-side JS
-// baad mein isko replace/enhance kar dega jab wo load hoga (normal users
-// ke liye), lekin crawler ke paas hamesha kam se kam yeh fallback content
-// maujood rahega.
 function weatherIconClass(code, isDay = 1) {
   if (code === 0) return isDay ? "fa-sun" : "fa-moon";
   if (code >= 1 && code <= 3) return isDay ? "fa-cloud-sun" : "fa-cloud-moon";
@@ -129,6 +123,39 @@ class ServerWeatherCardRewriter {
       element.setInnerContent(this.html, { html: true });
     }
   }
+}
+
+// Naya: Nearby Cities section — same state/country ke 10 aur shehar ka
+// server-side HTML banate hain, taaki har city page dusre city pages se
+// link ho (internal linking web), aur Googlebot ko raw HTML mein hi
+// yeh links mil jaayein.
+class NearbyCitiesRewriter {
+  constructor(html) { this.html = html; }
+  element(element) {
+    if (this.html) {
+      element.setInnerContent(this.html, { html: true });
+    }
+  }
+}
+
+function buildNearbyCitiesHtml(cities, cityLabel, stateOrCountry) {
+  if (!cities || cities.length === 0) return "";
+
+  const links = cities.map(c => {
+    const label = c.state ? `${c.city_name}, ${c.state}` : c.city_name;
+    return `<a href="/weather/${c.city_slug}/" class="nearby-city-link">${label}</a>`;
+  }).join("");
+
+  return `
+    <div class="premium-card" style="margin-bottom: 16px; padding: 16px;">
+      <h3 class="section-title" style="font-size:15px; margin-bottom:10px;">
+        <i class="fa-solid fa-location-dot text-primary"></i> Nearby Cities in ${stateOrCountry}
+      </h3>
+      <div style="display:flex; flex-wrap:wrap; gap:8px;">
+        ${links}
+      </div>
+    </div>
+  `;
 }
 
 async function fetchServerWeatherHtml(cityLabel, lat, lon) {
@@ -209,6 +236,31 @@ export async function onRequest(context) {
     lon: city.lon
   };
 
+  // Nearby cities: agar state maujood hai to usi state ke shehar,
+  // warna usi country ke shehar. 10 random cities (khud ko chhodkar).
+  let nearbyHtml = "";
+  try {
+    let nearbyResult;
+    if (city.state) {
+      nearbyResult = await env.DB.prepare(
+        `SELECT city_name, city_slug, state FROM cities
+         WHERE state = ? AND city_slug != ?
+         ORDER BY RANDOM() LIMIT 10`
+      ).bind(city.state, slug).all();
+    } else {
+      nearbyResult = await env.DB.prepare(
+        `SELECT city_name, city_slug, state FROM cities
+         WHERE country_code = ? AND city_slug != ?
+         ORDER BY RANDOM() LIMIT 10`
+      ).bind(city.country_code, slug).all();
+    }
+    const nearbyCities = nearbyResult && nearbyResult.results ? nearbyResult.results : [];
+    const stateOrCountry = city.state || city.country_code.toUpperCase();
+    nearbyHtml = buildNearbyCitiesHtml(nearbyCities, cityLabel, stateOrCountry);
+  } catch (err) {
+    nearbyHtml = "";
+  }
+
   // Weather data ko city lookup ke saath hi parallel mein fetch kar lete hain
   const weatherHtml = await fetchServerWeatherHtml(cityLabel, city.lat, city.lon);
 
@@ -222,7 +274,8 @@ export async function onRequest(context) {
     .on('link[rel="canonical"]', new CanonicalRewriter(slug))
     .on("head", new StructuredDataInjector(cityData, `https://world-weather-hub.pages.dev/weather/${slug}/`))
     .on("head", new PreloadedCityInjector(cityData, slug))
-    .on("#currentWeatherCard", new ServerWeatherCardRewriter(weatherHtml));
+    .on("#currentWeatherCard", new ServerWeatherCardRewriter(weatherHtml))
+    .on("#nearbyCitiesSection", new NearbyCitiesRewriter(nearbyHtml));
 
   return rewriter.transform(res);
 }
