@@ -76,6 +76,42 @@ function renderHome(data, aqiData, cityName, card, hourlySection, aqiSection, ad
         // 2. HOURLY FORECAST
         hourlySection.style.display = 'block';
         setupHourlySection(data);
+        // 2.5. SUN & UV CARD LOGIC
+        const sunUvSection = document.getElementById('sunUvSection');
+        if (sunUvSection && data.daily) {
+            const uvIndex = data.daily.uv_index_max ? data.daily.uv_index_max[0] : null;
+            const sunriseRaw = data.daily.sunrise ? data.daily.sunrise[0] : null;
+            const sunsetRaw = data.daily.sunset ? data.daily.sunset[0] : null;
+
+            if (uvIndex !== null || sunriseRaw) {
+                sunUvSection.style.display = 'flex';
+
+                let uvLabel = 'Low', uvColor = '#34a853';
+                if (uvIndex >= 3 && uvIndex < 6) { uvLabel = 'Moderate'; uvColor = '#fbbc04'; }
+                else if (uvIndex >= 6 && uvIndex < 8) { uvLabel = 'High'; uvColor = '#fa7b17'; }
+                else if (uvIndex >= 8 && uvIndex < 11) { uvLabel = 'Very High'; uvColor = '#ea4335'; }
+                else if (uvIndex >= 11) { uvLabel = 'Extreme'; uvColor = '#a142f4'; }
+
+                const sunriseTime = sunriseRaw ? new Date(sunriseRaw).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '--';
+                const sunsetTime = sunsetRaw ? new Date(sunsetRaw).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '--';
+
+                sunUvSection.innerHTML = `
+                    <div class="c-aqi-left">
+                        <div class="c-aqi-icon" style="background: ${uvColor}20; color: ${uvColor};">
+                            <i class="fa-solid fa-sun"></i>
+                        </div>
+                        <div class="c-aqi-text">
+                            <h4>UV Index</h4>
+                            <p><i class="fa-solid fa-sunrise"></i> ${sunriseTime} &nbsp; <i class="fa-solid fa-sunset"></i> ${sunsetTime}</p>
+                        </div>
+                    </div>
+                    <div class="c-aqi-right">
+                        <span class="c-aqi-val" style="color: ${uvColor}">${uvIndex !== null ? uvIndex : '--'}</span>
+                        <span class="aqi-status-badge" style="background:${uvColor}20; color:${uvColor};">${uvLabel}</span>
+                    </div>
+                `;
+            }
+        }
 
         // 3. COMPACT AQI CARD LOGIC
         if(aqiData && aqiData.current && aqiSection) {
