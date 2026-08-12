@@ -79,7 +79,7 @@ function renderHome(data, aqiData, cityName, card, hourlySection, aqiSection, ad
         // 2.5. SUN & UV CARD LOGIC
         const sunUvSection = document.getElementById('sunUvSection');
         if (sunUvSection && data.daily) {
-            const uvIndex = data.daily.uv_index_max ? data.daily.uv_index_max[0] : null;
+            const uvIndex = data.daily.uv_index_max ? Math.round(data.daily.uv_index_max[0]) : null;
             const sunriseRaw = data.daily.sunrise ? data.daily.sunrise[0] : null;
             const sunsetRaw = data.daily.sunset ? data.daily.sunset[0] : null;
 
@@ -102,7 +102,7 @@ function renderHome(data, aqiData, cityName, card, hourlySection, aqiSection, ad
                         </div>
                         <div class="c-aqi-text">
                             <h4>UV Index</h4>
-                            <p><i class="fa-solid fa-sunrise"></i> ${sunriseTime} &nbsp; <i class="fa-solid fa-sunset"></i> ${sunsetTime}</p>
+                            <p><i class="fa-solid fa-sunrise" style="font-size:10px;"></i> ${sunriseTime} &nbsp;&nbsp; <i class="fa-solid fa-sunset" style="font-size:10px;"></i> ${sunsetTime}</p>
                         </div>
                     </div>
                     <div class="c-aqi-right">
