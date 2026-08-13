@@ -121,9 +121,12 @@ class ServerWeatherCardRewriter {
   element(element) {
     if (this.html) {
       element.setInnerContent(this.html, { html: true });
+    } else {
+      element.setInnerContent(`<div style="padding: 20px; text-align: center;">Loading Weather...</div>`, { html: true });
     }
   }
 }
+
 
 // Naya: Nearby Cities section — same state/country ke 10 aur shehar ka
 // server-side HTML banate hain, taaki har city page dusre city pages se
