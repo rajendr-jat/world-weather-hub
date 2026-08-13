@@ -21,14 +21,10 @@ async function initHome() {
 
         renderHome(data, aqiData, cityName, card, hourlySection, aqiSection, adviceSection);
     } catch (err) {
-        // Pehle yahan koi try/catch nahi tha. Agar upar wali koi bhi cheez fail
-        // hoti (jaise ACTIVE_CITY resolve na hona, ya koi aur unexpected error),
-        // to yeh function beech mein hi ruk jaata aur card ka HTML kabhi update
-        // nahi hota — matlab "Loading local weather..." spinner hamesha ke liye
-        // ghumta rehta. Ab error catch hoke user ko clear message dikhega.
         console.error('initHome failed:', err);
         if (card) {
-            card.innerHTML = '<div style="padding: 20px; text-align: center;">Error loading weather data. Please refresh the page.</div>';
+            // PEHLA BADLAAV YAHAN KIYA GAYA HAI
+            card.innerHTML = '<div style="padding: 20px; text-align: center; color: #5f6368;"><i class="fa-solid fa-spinner fa-spin text-primary"></i> Live weather data updating...</div>';
         }
     }
 }
@@ -143,7 +139,8 @@ function renderHome(data, aqiData, cityName, card, hourlySection, aqiSection, ad
             generateSmartAdvice(data, aqiData);
         }
     } else {
-        card.innerHTML = '<div style="padding: 20px; text-align: center;">Error loading data</div>';
+        // DOOSRA BADLAAV YAHAN KIYA GAYA HAI
+        card.innerHTML = '<div style="padding: 20px; text-align: center; color: #5f6368;"><i class="fa-solid fa-spinner fa-spin text-primary"></i> Loading current conditions...</div>';
     }
 }
 
@@ -190,8 +187,6 @@ function setupHourlySection(data) {
 function renderHourlyData(dateKey, isToday, fullHourlyData, currentTime, daysMap) {
     let displayData = [];
     if (isToday) {
-        // API 'currentTime' टार्गेट सिटी के टाइमज़ोन में देता है (e.g., "2026-07-24T15:45")
-        // इसे वर्तमान घंटे के शुरुआत (00 मिनट) पर सेट करें ताकि अभी का घंटा मिस न हो
         const currentHourIso = currentTime.substring(0, 13) + ":00";
         
         const startIndex = fullHourlyData.time.findIndex(t => t >= currentHourIso);
@@ -210,12 +205,10 @@ function renderHourlyData(dateKey, isToday, fullHourlyData, currentTime, daysMap
     }
 
     const labels = displayData.map(d => {
-        // API के स्ट्रिंग से डायरेक्ट hour निकालेंगे ताकि लोकल सिस्टम का टाइमज़ोन इफ़ेक्ट न करे
         const hour = parseInt(d.timeStr.substring(11, 13), 10);
         const ampm = hour >= 12 ? 'PM' : 'AM';
         const h = hour % 12 || 12;
         
-        // अगर यह बिल्कुल अभी का घंटा है, तो उसे "Now" दिखाएं
         if (isToday && d.timeStr === (currentTime.substring(0, 13) + ":00")) {
             return "Now";
         }
