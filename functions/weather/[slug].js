@@ -266,7 +266,7 @@ function buildCitySummaryHtml(cityLabel, weatherCur, aqiVal, seed) {
   return `
     <div class="premium-card" style="margin-bottom: 16px; padding: 16px;">
       <h3 class="section-title" style="font-size:15px; margin-bottom:10px;">
-        <i class="fa-solid fa-align-left text-primary"></i> Today's Weather Summary for ${cityLabel}
+        <i class="fa-solid fa-align-left text-primary"></i> ${cityLabel} Weather Today
       </h3>
       <p style="font-size:13px; color:#3c4043; line-height:1.7; margin:0;">
         ${opener} ${feelsLine} ${conditionLine} ${aqiSentence}
