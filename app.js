@@ -138,6 +138,12 @@ function renderHome(data, aqiData, cityName, card, hourlySection, aqiSection, ad
             adviceSection.style.display = 'block';
             generateSmartAdvice(data, aqiData);
         }
+        // 5. CITY SUMMARY PARAGRAPH (homepage ke liye, city pages jaisa hi)
+        const citySummarySection = document.getElementById('citySummarySection');
+        if (citySummarySection) {
+            const aqiVal = (aqiData && aqiData.current) ? aqiData.current.us_aqi : null;
+            citySummarySection.innerHTML = buildCitySummaryHtml(cityName, cur, aqiVal);
+        }
     } else {
         // DOOSRA BADLAAV YAHAN KIYA GAYA HAI
         card.innerHTML = '<div style="padding: 20px; text-align: center; color: #5f6368;"><i class="fa-solid fa-spinner fa-spin text-primary"></i> Loading current conditions...</div>';
@@ -321,3 +327,96 @@ function generateSmartAdvice(weatherData, aqiData) {
 }
 
 window.addEventListener('DOMContentLoaded', initHome);
+// City Summary Paragraph Generator (client-side, homepage ke liye)
+function buildCitySummaryHtml(cityLabel, cur, aqiVal) {
+    if (!cur) return '';
+
+    const temp = Math.round(cur.temperature_2m);
+    const feels = Math.round(cur.apparent_temperature);
+    const humidity = cur.relative_humidity_2m;
+    const wind = Math.round(cur.wind_speed_10m);
+    const conditionText = getWeatherConditionText(cur.weather_code).toLowerCase();
+
+    let tempOpeners;
+    if (temp >= 35) {
+        tempOpeners = [
+            `${cityLabel} is experiencing intense heat today, with the mercury touching ${temp}°C.`,
+            `It's a scorching day in ${cityLabel}, with temperatures reaching ${temp}°C.`,
+            `Today's heat in ${cityLabel} is significant, hovering around ${temp}°C.`
+        ];
+    } else if (temp >= 25) {
+        tempOpeners = [
+            `${cityLabel} is seeing warm conditions today, with temperatures around ${temp}°C.`,
+            `The weather in ${cityLabel} is pleasantly warm at ${temp}°C right now.`,
+            `Today in ${cityLabel}, temperatures are sitting comfortably near ${temp}°C.`
+        ];
+    } else if (temp >= 15) {
+        tempOpeners = [
+            `${cityLabel} is enjoying mild weather today, with temperatures around ${temp}°C.`,
+            `Conditions in ${cityLabel} are cool and comfortable, currently at ${temp}°C.`,
+            `It's a mild day in ${cityLabel}, with the temperature reading ${temp}°C.`
+        ];
+    } else {
+        tempOpeners = [
+            `${cityLabel} is experiencing cold conditions today, with temperatures around ${temp}°C.`,
+            `It's a chilly day in ${cityLabel}, with the mercury at just ${temp}°C.`,
+            `Today's weather in ${cityLabel} is notably cold, sitting near ${temp}°C.`
+        ];
+    }
+
+    const feelsDiff = feels - temp;
+    let feelsSentences;
+    if (feelsDiff >= 5) {
+        feelsSentences = [
+            `Due to high humidity, it feels noticeably warmer at around ${feels}°C.`,
+            `Humidity is making it feel closer to ${feels}°C than the actual reading.`
+        ];
+    } else if (feelsDiff <= -3) {
+        feelsSentences = [
+            `Wind chill is bringing the felt temperature down to about ${feels}°C.`,
+            `It feels slightly cooler than the actual reading, closer to ${feels}°C.`
+        ];
+    } else {
+        feelsSentences = [
+            `The apparent temperature closely matches the actual reading, at ${feels}°C.`,
+            `It feels about as expected, close to ${feels}°C.`
+        ];
+    }
+
+    const humidityDesc = humidity >= 70 ? "high humidity" : (humidity >= 40 ? "moderate humidity" : "low humidity");
+    const windDesc = wind >= 25 ? "strong winds" : (wind >= 10 ? "a gentle breeze" : "calm air");
+
+    const conditionSentences = [
+        `Skies are ${conditionText} with ${humidityDesc} at ${humidity}% and ${windDesc} blowing at ${wind} km/h.`,
+        `The sky remains ${conditionText}, humidity is at ${humidity}%, and wind speeds are around ${wind} km/h.`
+    ];
+
+    let aqiSentence = "";
+    if (aqiVal !== null && aqiVal !== undefined) {
+        if (aqiVal <= 50) {
+            aqiSentence = `Air quality is good today (AQI ${aqiVal}), making it a favourable time for outdoor activities.`;
+        } else if (aqiVal <= 100) {
+            aqiSentence = `Air quality is moderate (AQI ${aqiVal}), generally acceptable for most people.`;
+        } else if (aqiVal <= 150) {
+            aqiSentence = `Air quality is at unhealthy levels for sensitive groups (AQI ${aqiVal}); those with respiratory conditions should take precautions.`;
+        } else {
+            aqiSentence = `Air quality is unhealthy today (AQI ${aqiVal}), and residents are advised to limit prolonged outdoor exposure.`;
+        }
+    }
+
+    const seed = Math.abs(Math.round(temp * 7 + humidity));
+    const opener = tempOpeners[seed % tempOpeners.length];
+    const feelsLine = feelsSentences[(seed + 1) % feelsSentences.length];
+    const conditionLine = conditionSentences[(seed + 2) % conditionSentences.length];
+
+    return `
+        <div class="premium-card" style="margin-bottom: 16px; padding: 16px;">
+            <h3 class="section-title" style="font-size:15px; margin-bottom:10px;">
+                <i class="fa-solid fa-align-left text-primary"></i> ${cityLabel} Weather Today
+            </h3>
+            <p style="font-size:13px; color:#3c4043; line-height:1.7; margin:0;">
+                ${opener} ${feelsLine} ${conditionLine} ${aqiSentence}
+            </p>
+        </div>
+    `;
+}
