@@ -6,8 +6,17 @@
 class TitleRewriter {
   constructor(cityLabel) { this.cityLabel = cityLabel; }
   element(element) {
-    element.setInnerContent(`${this.cityLabel} Weather Today - Live Forecast & AQI | World Weather Hub`);
+    // Suffix ~24 chars hai, isliye cityLabel ko max ~44 chars tak allow karte
+    // hain taaki poora title 70 characters se kabhi na badhe (SEO best practice).
+    const suffix = " Weather Today | AQI & Forecast";
+    const maxCityLen = 70 - suffix.length;
+    let label = this.cityLabel;
+    if (label.length > maxCityLen) {
+      label = label.slice(0, maxCityLen - 1).trim() + "…";
+    }
+    element.setInnerContent(`${label}${suffix}`);
   }
+}
 }
 class CanonicalRewriter {
   constructor(slug) { this.slug = slug; }
