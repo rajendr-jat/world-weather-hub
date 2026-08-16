@@ -17,7 +17,7 @@ class TitleRewriter {
     element.setInnerContent(`${label}${suffix}`);
   }
 }
-}
+
 class CanonicalRewriter {
   constructor(slug) { this.slug = slug; }
   element(element) {
