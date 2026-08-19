@@ -19,6 +19,16 @@
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/style.css">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "16-Day Extended Weather Forecast",
+      "url": "https://world-weather-hub.pages.dev/forecast.html",
+      "description": "Plan ahead with a 16-day extended daily weather forecast including temperature highs/lows, rain probability, wind and UV index.",
+      "isPartOf": { "@type": "WebSite", "name": "World Weather Hub", "url": "https://world-weather-hub.pages.dev/" }
+    }
+    </script>
 </head>
 <body>
     <div class="main-container wider-container" style="max-width: 900px !important;">
@@ -27,7 +37,7 @@
             <div class="header-left">
                 <button class="icon-btn"><i class="fa-solid fa-bars"></i></button>
                 <div class="brand-logo">
-                    <img src="https://img.icons8.com/color/48/globe.png" alt="logo" class="globe-img">
+                    <img src="https://img.icons8.com/color/48/globe.png" alt="World Weather Hub logo" class="globe-img" width="26" height="26" loading="lazy">
                     <span class="brand-text">World Weather Hub</span>
                 </div>
             </div>
@@ -67,8 +77,10 @@
             'params' : {}
           };
         </script>
-        <script src="https://www.highperformanceformat.com/30cbe79f1362a805d73386c3bdd7d835/invoke.js"></script>
+        <script async defer src="https://www.highperformanceformat.com/30cbe79f1362a805d73386c3bdd7d835/invoke.js"></script>
         </div>
+
+        <div id="forecastMiniGrid" class="mini-feature-grid" style="display:none;"></div>
 
         <div id="forecastLoader" style="text-align:center; padding: 50px;">
             <i class="fa-solid fa-spinner fa-spin" style="font-size: 30px; color:#1a73e8;"></i>
@@ -106,7 +118,6 @@
     </div>
 
     <!-- Scripts -->
-    <script src="/cities.js"></script>
     <script src="/api.js"></script>
     <script src="/search.js"></script>
     <script src="/ui.js"></script>

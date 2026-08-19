@@ -18,8 +18,18 @@
     <link rel="canonical" href="https://world-weather-hub.pages.dev/aqi.html" />
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="/style.css">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Live Air Quality Index (AQI) & Pollutant Data",
+      "url": "https://world-weather-hub.pages.dev/aqi.html",
+      "description": "Real-time Air Quality Index, pollutant breakdown (PM2.5, PM10, Ozone), pollen levels and 24-hour AQI trends.",
+      "isPartOf": { "@type": "WebSite", "name": "World Weather Hub", "url": "https://world-weather-hub.pages.dev/" }
+    }
+    </script>
     
     <!-- inline styles as they were... -->
     <style>
@@ -42,7 +52,7 @@
             <div class="header-left">
                 <button class="icon-btn"><i class="fa-solid fa-bars"></i></button>
                 <div class="brand-logo">
-                    <img src="https://img.icons8.com/color/48/globe.png" alt="logo" class="globe-img">
+                    <img src="https://img.icons8.com/color/48/globe.png" alt="World Weather Hub logo" class="globe-img" width="26" height="26" loading="lazy">
                     <span class="brand-text">World Weather Hub</span>
                 </div>
             </div>
@@ -109,7 +119,7 @@
     'params' : {}
   };
 </script>
-<script src="https://www.highperformanceformat.com/30cbe79f1362a805d73386c3bdd7d835/invoke.js"></script>
+<script async defer src="https://www.highperformanceformat.com/30cbe79f1362a805d73386c3bdd7d835/invoke.js"></script>
             </div>
 
             <div class="premium-card" style="margin-bottom: 16px;">
@@ -207,7 +217,6 @@
     </div>
 
     <!-- Scripts -->
-    <script src="/cities.js"></script>
 <script src="/api.js"></script>
 <script src="/search.js"></script>
 <script src="/ui.js"></script>

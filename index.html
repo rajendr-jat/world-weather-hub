@@ -15,10 +15,33 @@
     <meta name="description" content="Get accurate real-time local weather conditions, hourly forecasts, temperature, rain probability, wind speed, and humidity with World Weather Hub.">
     <meta name="robots" content="index, follow">
     <meta name="google-site-verification" content="12_OIhHqMXgx_TyWICr3XAc003aji9IOn5KlCt7F4HA" />  
-    <link rel="canonical" href="https://world-weather-hub.pages.dev/" /><link rel="icon" type="image/png" href="/favicon.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="canonical" href="https://world-weather-hub.pages.dev/" />
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/favicon.png">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Live Local Weather Forecast & Conditions | World Weather Hub">
+    <meta property="og:description" content="Real-time weather, 16-day forecast, AQI, pollen, moon phase and smart advice for any city in the world.">
+    <meta property="og:url" content="https://world-weather-hub.pages.dev/">
+    <meta property="og:image" content="https://world-weather-hub.pages.dev/favicon.png">
+    <meta name="twitter:card" content="summary">
+    <link rel="preconnect" href="https://api.open-meteo.com">
+    <link rel="preconnect" href="https://air-quality-api.open-meteo.com">
     <link rel="stylesheet" href="/style.css">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "World Weather Hub",
+      "url": "https://world-weather-hub.pages.dev/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://world-weather-hub.pages.dev/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1823211435001427"
      crossorigin="anonymous"></script>
 </head>
@@ -37,7 +60,7 @@
                     </div>
                 </div>
                 <div class="brand-logo">
-                    <img src="https://img.icons8.com/color/48/globe.png" alt="logo" class="globe-img">
+                    <img src="https://img.icons8.com/color/48/globe.png" alt="World Weather Hub logo" class="globe-img" width="26" height="26" loading="lazy">
                     <span class="brand-text">World Weather Hub</span>
                 </div>
             </div>
@@ -72,6 +95,7 @@
         </div>
         <div id="sunUvSection" class="compact-aqi-card" style="display: none; margin-top: 10px;"></div>
         <div id="compactAqiSection" class="compact-aqi-card" style="display: none;"></div>
+        <div id="miniFeatureGrid" class="mini-feature-grid" style="display:none; margin-top: 10px;"></div>
 
         <div style="text-align:center; margin:2px 0;">
         <script>
@@ -83,7 +107,7 @@
             'params' : {}
           };
         </script>
-        <script src="https://www.highperformanceformat.com/30cbe79f1362a805d73386c3bdd7d835/invoke.js"></script>
+        <script async defer src="https://www.highperformanceformat.com/30cbe79f1362a805d73386c3bdd7d835/invoke.js"></script>
         </div>
 
         <div id="hourlySection" class="hourly-forecast-card" style="display: none;">
@@ -134,12 +158,11 @@
     </div>
 
     <!-- Scripts -->
-    <script src="/cities.js"></script>
     <script src="/api.js"></script>
     <script src="/search.js"></script>
     <script src="/ui.js"></script>
     <script src="/app.js"></script>
-     <script src="https://pl30699731.effectivecpmnetwork.com/26/4f/45/264f45b1576b5831382de44b2da8227f.js"></script>
+     <script async defer src="https://pl30699731.effectivecpmnetwork.com/26/4f/45/264f45b1576b5831382de44b2da8227f.js"></script>
      
 </body>
 </html>

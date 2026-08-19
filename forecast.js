@@ -21,6 +21,22 @@ async function initForecast() {
         if(loader) loader.style.display = 'none';
         if(contentDiv) contentDiv.style.display = 'block';
 
+        // Mini feature grid: Moon Phase, Pressure, Visibility (free Open-Meteo data)
+        const fMiniGrid = document.getElementById('forecastMiniGrid');
+        if (fMiniGrid && data && data.current) {
+            const moon = getMoonPhase();
+            const visKm = data.current.visibility ? (data.current.visibility / 1000).toFixed(1) : '--';
+            const pressure = data.current.pressure_msl ? Math.round(data.current.pressure_msl) : '--';
+            const uvMax = data.daily && data.daily.uv_index_max ? Math.round(data.daily.uv_index_max[0]) : '--';
+            fMiniGrid.style.display = 'grid';
+            fMiniGrid.innerHTML = `
+                <div class="mini-feature-card"><i class="fa-solid ${moon.icon}"></i><div class="mf-label">Moon Phase</div><div class="mf-value">${moon.name}</div></div>
+                <div class="mini-feature-card"><i class="fa-solid fa-eye"></i><div class="mf-label">Visibility</div><div class="mf-value">${visKm} km</div></div>
+                <div class="mini-feature-card"><i class="fa-solid fa-gauge"></i><div class="mf-label">Pressure</div><div class="mf-value">${pressure} hPa</div></div>
+                <div class="mini-feature-card"><i class="fa-solid fa-sun"></i><div class="mf-label">Peak UV Today</div><div class="mf-value">${uvMax}</div></div>
+            `;
+        }
+
         if (data && data.daily && data.daily.time) {
             container.innerHTML = ''; 
             const daily = data.daily;

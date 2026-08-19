@@ -1,5 +1,5 @@
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, sans-serif; }
-body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; display: flex; justify-content: center; }
+body { background-color: #f3f0fb; color: #202124; padding: 12px 12px 80px 12px; display: flex; justify-content: center; }
 .main-container { max-width: 480px; width: 100%; display: flex; flex-direction: column; gap: 16px; }
 .wider-container { max-width: 650px !important; }
 .compact-header { display: flex; align-items: center; justify-content: space-between; padding: 4px 0; }
@@ -8,16 +8,16 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
 .icon-btn:hover { background-color: #e8eaed; }
 .brand-logo { display: flex; align-items: center; gap: 8px; }
 .globe-img { width: 26px; height: 26px; }
-.brand-text { font-size: 18px; font-weight: 600; color: #1a73e8; }
+.brand-text { font-size: 18px; font-weight: 600; color: #7c3aed; }
 .top-search-section { display: flex; gap: 10px; }
-.search-input-wrap { flex: 1; background: #ffffff; border: 1px solid #dadce0; border-radius: 12px; padding: 0 16px; height: 46px; display: flex; align-items: center; }
+.search-input-wrap { flex: 1; background: #ffffff; border: 1px solid #e4d9fb; border-radius: 12px; padding: 0 16px; height: 46px; display: flex; align-items: center; }
 .search-input-wrap input { width: 100%; border: none; outline: none; font-size: 15px; background: transparent; }
 .orange-search-btn { background-color: #ff5722; color: #ffffff; border: none; border-radius: 12px; padding: 0 20px; font-size: 15px; font-weight: 600; cursor: pointer; }
-.nav-tabs-container { background: #ffffff; border: 1px solid #dadce0; border-radius: 14px; display: flex; padding: 4px; gap: 4px; }
+.nav-tabs-container { background: #ffffff; border: 1px solid #e4d9fb; border-radius: 14px; display: flex; padding: 4px; gap: 4px; }
 .tab-btn { flex: 1; background: transparent; border: none; padding: 8px 0; border-radius: 10px; font-size: 14px; font-weight: 600; color: #5f6368; text-decoration: none; text-align: center; }
-.tab-btn.active { background-color: #e8f0fe; color: #1a73e8; }
-.weather-hero-card { background: linear-gradient(135deg, #1b4f72 0%, #2e86c1 50%, #5dade2 100%); border-radius: 20px; color: #ffffff; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.12); margin-bottom:10px; }
-.weather-content { padding: 20px; background: linear-gradient(135deg, #4a90d9 0%, #6fb1e8 50%, #8ec9f0 100%); }
+.tab-btn.active { background-color: #f1e9fe; color: #7c3aed; }
+.weather-hero-card { background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 50%, #ec4899 100%); border-radius: 20px; color: #ffffff; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.12); margin-bottom:10px; }
+.weather-content { padding: 20px; background: linear-gradient(135deg, #7c3aed 0%, #c026d3 50%, #f472b6 100%); }
 .location-info { display: flex; align-items: center; gap: 6px; font-size: 20px; font-weight: 600; }
 .temp-display { display: flex; align-items: flex-start; margin: 6px 0; }
 .temp-value { font-size: 64px; font-weight: 700; line-height: 1; }
@@ -25,13 +25,13 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
 .hi-lo-pills { margin-top: 12px; background: rgba(255, 255, 255, 0.25); display: inline-flex; gap: 10px; padding: 6px 14px; border-radius: 16px; font-size: 13px; font-weight: 600; }
 .weather-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); background: rgba(10, 25, 47, 0.8); padding: 12px 4px; text-align: center; color: #fff; }
 .stat-item { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 11px; }
-.stat-item i { font-size: 16px; color: #64b5f6; }
+.stat-item i { font-size: 16px; color: #c4b5fd; }
 .page-title-box { padding: 10px 0; }
 .page-title-box h1, .page-title-box h2 { font-size: 22px; font-weight: 700; color: #202124; }
 .page-title-box p { font-size: 13px; color: #5f6368; }
 .forecast-list-container { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
-.daily-card { background: #ffffff; border-radius: 16px; border: 1px solid #dadce0; overflow: hidden; transition: box-shadow 0.3s; }
-.daily-card.active { box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-color: #c6dafc; }
+.daily-card { background: #ffffff; border-radius: 16px; border: 1px solid #e4d9fb; overflow: hidden; transition: box-shadow 0.3s; }
+.daily-card.active { box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-color: #d9c6fb; }
 .daily-summary { display: flex; align-items: center; justify-content: space-between; padding: 16px; cursor: pointer; background: #ffffff; }
 .daily-card.active .daily-summary { background: #f8faff; border-bottom: 1px solid #e8eaed; }
 .day-col { display: flex; flex-direction: column; width: 60px; }
@@ -42,7 +42,7 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
 .temp-col { display: flex; gap: 8px; font-size: 15px; font-weight: 600; width: 60px; justify-content: flex-end; }
 .arrow-col { width: 24px; display: flex; justify-content: flex-end; color: #9aa0a6; }
 .expand-icon { transition: transform 0.3s ease; }
-.daily-card.active .expand-icon { transform: rotate(180deg); color: #1a73e8; }
+.daily-card.active .expand-icon { transform: rotate(180deg); color: #7c3aed; }
 .daily-details { max-height: 0; overflow: hidden; transition: max-height 0.35s ease-out; background: #fdfdfd; }
 .daily-card.active .daily-details { max-height: 300px; }
 .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px; }
@@ -50,7 +50,7 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
 .d-item i { font-size: 20px; background: #f1f3f4; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
 .d-info span { font-size: 11px; color: #5f6368; display: block; }
 .d-info b { font-size: 13px; color: #202124; }
-.aqi-hero-card { background: #ffffff; border-radius: 16px; padding: 20px; border: 1px solid #dadce0; display: flex; flex-direction: column; gap: 16px; margin-bottom: 16px;}
+.aqi-hero-card { background: #ffffff; border-radius: 16px; padding: 20px; border: 1px solid #e4d9fb; display: flex; flex-direction: column; gap: 16px; margin-bottom: 16px;}
 .aqi-score-box { display: flex; align-items: center; gap: 12px; }
 .aqi-big-num { font-size: 48px; font-weight: 700; line-height: 1; }
 .aqi-status-badge { padding: 4px 12px; border-radius: 20px; font-size: 14px; font-weight: 600; }
@@ -61,30 +61,30 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
 .pollutant-pill-box { background: #f8f9fa; border: 1px solid #e8eaed; border-radius: 10px; padding: 8px 10px; }
 .p-name { font-size: 11px; color: #5f6368; display: block;}
 .p-val { font-size: 13px; font-weight: 700; }
-.bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #ffffff; border-top: 1px solid #dadce0; display: flex; justify-content: space-around; padding: 8px 0; z-index: 1000; }
+.bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #ffffff; border-top: 1px solid #e4d9fb; display: flex; justify-content: space-around; padding: 8px 0; z-index: 1000; }
 .b-nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; text-decoration: none; color: #5f6368; font-size: 11px; font-weight: 500; }
 .b-nav-item i { font-size: 18px; }
-.b-nav-item.active { color: #1a73e8; }
+.b-nav-item.active { color: #7c3aed; }
 .text-warning { color: #fbbc04; }
 .text-info { color: #4fc3f7; }
-.text-primary { color: #1a73e8; }
+.text-primary { color: #7c3aed; }
 .text-secondary { color: #9aa0a6; }
 .text-danger { color: #ea4335; }
 .text-good { color: #137333; }
 /* --- NEW: Hourly Section & Chart Styles --- */
-.hourly-forecast-card { background: #ffffff; border-radius: 16px; padding: 16px; border: 1px solid #dadce0; margin-bottom: 20px; }
+.hourly-forecast-card { background: #ffffff; border-radius: 16px; padding: 16px; border: 1px solid #e4d9fb; margin-bottom: 20px; }
 .section-title { font-size: 16px; font-weight: 700; color: #202124; margin-bottom: 12px; }
 
 /* 7 Days Tabs */
 .hourly-tabs-container { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 8px; margin-bottom: 12px; }
 .hourly-tabs-container::-webkit-scrollbar { display: none; }
 .h-tab-btn { background: #f1f3f4; border: 1px solid transparent; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; color: #5f6368; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
-.h-tab-btn.active { background: #e8f0fe; color: #1a73e8; border-color: #1a73e8; }
+.h-tab-btn.active { background: #f1e9fe; color: #7c3aed; border-color: #7c3aed; }
 
 /* Chart Wrapper */
 .hourly-chart-wrapper { width: 100%; overflow-x: auto; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px dashed #e8eaed; }
 .hourly-chart-wrapper::-webkit-scrollbar { height: 4px; }
-.hourly-chart-wrapper::-webkit-scrollbar-thumb { background: #dadce0; border-radius: 4px; }
+.hourly-chart-wrapper::-webkit-scrollbar-thumb { background: #e4d9fb; border-radius: 4px; }
 
 /* Scrollable Hourly Cards */
 .hourly-cards-row { display: flex; overflow-x: auto; gap: 12px; padding-bottom: 8px; }
@@ -93,7 +93,7 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
 .h-time { font-size: 11px; color: #5f6368; margin-bottom: 8px; font-weight: 500; }
 .h-icon { font-size: 22px; margin-bottom: 8px; }
 .h-temp { font-size: 15px; font-weight: 700; color: #202124; }
-.h-rain { font-size: 11px; color: #1a73e8; font-weight: 600; margin-top: 6px; }
+.h-rain { font-size: 11px; color: #7c3aed; font-weight: 600; margin-top: 6px; }
 /* --- Auto Suggestion Dropdown Styles --- */
 .suggestions-box {
     position: absolute;
@@ -101,7 +101,7 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
     left: 0;
     right: 0;
     background: #ffffff;
-    border: 1px solid #dadce0;
+    border: 1px solid #e4d9fb;
     border-radius: 12px;
     margin-top: 6px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.15);
@@ -113,7 +113,7 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
 
 /* Scrollbar design for suggestions */
 .suggestions-box::-webkit-scrollbar { width: 6px; }
-.suggestions-box::-webkit-scrollbar-thumb { background: #dadce0; border-radius: 4px; }
+.suggestions-box::-webkit-scrollbar-thumb { background: #e4d9fb; border-radius: 4px; }
 
 .suggestion-item {
     padding: 12px 16px;
@@ -144,7 +144,7 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
     color: #5f6368;
 }
 /* --- Compact AQI Card (Home Page) --- */
-.compact-aqi-card { background: #ffffff; border-radius: 16px; padding: 16px; border: 1px solid #dadce0; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+.compact-aqi-card { background: #ffffff; border-radius: 16px; padding: 16px; border: 1px solid #e4d9fb; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
 .c-aqi-left { display: flex; align-items: center; gap: 12px; }
 .c-aqi-icon { font-size: 24px; color: #34a853; background: #e8f5e9; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
 .c-aqi-text h4 { font-size: 15px; font-weight: 700; color: #202124; margin-bottom: 2px; }
@@ -153,11 +153,11 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
 .c-aqi-val { font-size: 26px; font-weight: 700; }
 
 /* --- Smart Hub Advice Card --- */
-.smart-advice-card { background: #ffffff; border-radius: 16px; padding: 16px; border: 1px solid #dadce0; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+.smart-advice-card { background: #ffffff; border-radius: 16px; padding: 16px; border: 1px solid #e4d9fb; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
 .advice-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; border-bottom: 1px solid #f1f3f4; padding-bottom: 12px; }
 .advice-header h3 { font-size: 17px; font-weight: 700; color: #202124; }
 .advice-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-.advice-list li { display: flex; gap: 12px; align-items: flex-start; font-size: 13.5px; color: #3c4043; line-height: 1.5; background: #f8f9fa; padding: 12px; border-radius: 12px; border-left: 4px solid #1a73e8; }
+.advice-list li { display: flex; gap: 12px; align-items: flex-start; font-size: 13.5px; color: #3c4043; line-height: 1.5; background: #f8f9fa; padding: 12px; border-radius: 12px; border-left: 4px solid #7c3aed; }
 .advice-list li i { font-size: 16px; margin-top: 3px; width: 20px; text-align: center; }
 /* =========================================
    PREMIUM AQI DASHBOARD STYLES 
@@ -179,7 +179,7 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
     background: #ffffff;
     border-radius: 16px;
     padding: 24px;
-    border: 1px solid #dadce0;
+    border: 1px solid #e4d9fb;
     box-shadow: 0 4px 12px rgba(0,0,0,0.03);
     text-align: center;
 }
@@ -252,7 +252,7 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
     background: #ffffff;
     border-radius: 16px;
     padding: 20px;
-    border: 1px solid #dadce0;
+    border: 1px solid #e4d9fb;
     box-shadow: 0 4px 12px rgba(0,0,0,0.03);
 }
 .side-title {
@@ -300,7 +300,7 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
     background: #ffffff;
     border-radius: 16px;
     padding: 16px;
-    border: 1px solid #dadce0;
+    border: 1px solid #e4d9fb;
     box-shadow: 0 4px 12px rgba(0,0,0,0.03);
     display: flex;
     flex-direction: column;
@@ -427,7 +427,7 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
     color: #5f6368;
     margin-bottom: 16px;
 }
-.breadcrumb a { color: #1a73e8; text-decoration: none; }
+.breadcrumb a { color: #7c3aed; text-decoration: none; }
 .hero-content-flex {
     display: flex;
     align-items: center;
@@ -452,7 +452,7 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
 
 /* Grid Comparisons */
 .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.compare-card { background: #fff; padding: 16px; border-radius: 12px; border: 1px solid #dadce0; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+.compare-card { background: #fff; padding: 16px; border-radius: 12px; border: 1px solid #e4d9fb; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
 .c-header { margin-bottom: 8px; font-size: 14px; }
 .compare-card p { font-size: 12px; color: #5f6368; line-height: 1.4; }
 
@@ -463,7 +463,7 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
     gap: 12px;
 }
 .metric-info-card {
-    background: #fff; padding: 14px; border-radius: 12px; border: 1px solid #dadce0;
+    background: #fff; padding: 14px; border-radius: 12px; border: 1px solid #e4d9fb;
     transition: transform 0.2s;
 }
 .metric-info-card:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
@@ -474,7 +474,7 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
 /* Timeline */
 .timeline-container { display: flex; flex-direction: column; gap: 10px; }
 .timeline-step { display: flex; gap: 12px; background: #fff; padding: 12px; border-radius: 12px; border: 1px solid #f1f3f4; align-items: center;}
-.t-icon { width: 36px; height: 36px; border-radius: 50%; background: #e8f0fe; color: #1a73e8; display: flex; align-items: center; justify-content: center; flex-shrink: 0;}
+.t-icon { width: 36px; height: 36px; border-radius: 50%; background: #f1e9fe; color: #7c3aed; display: flex; align-items: center; justify-content: center; flex-shrink: 0;}
 .t-content b { font-size: 13px; color: #202124; }
 .t-content p { font-size: 11px; color: #5f6368; margin-top: 2px; }
 
@@ -485,7 +485,7 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
 
 /* Symbols Grid */
 .symbols-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
-.sym-item { display: flex; align-items: center; gap: 12px; background: #fff; padding: 12px; border: 1px solid #dadce0; border-radius: 12px; }
+.sym-item { display: flex; align-items: center; gap: 12px; background: #fff; padding: 12px; border: 1px solid #e4d9fb; border-radius: 12px; }
 .sym-item i { font-size: 20px; width: 24px; text-align: center; }
 .sym-item b { font-size: 12px; color: #202124; display:block; }
 .sym-item p { font-size: 10px; color: #5f6368; }
@@ -504,7 +504,7 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
 /* Safety Grid */
 .safety-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
 @media(min-width: 600px){ .safety-grid { grid-template-columns: 1fr 1fr; } }
-.safety-box { background: #fff; padding: 16px; border: 1px solid #dadce0; border-radius: 12px; }
+.safety-box { background: #fff; padding: 16px; border: 1px solid #e4d9fb; border-radius: 12px; }
 .safety-box h3 { font-size: 14px; margin-bottom: 12px; }
 .safety-box ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
 .safety-box li { font-size: 12px; color: #3c4043; display: flex; align-items: flex-start; gap: 8px; }
@@ -512,7 +512,7 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
 
 /* FAQ Accordion */
 .faq-container { display: flex; flex-direction: column; gap: 10px; }
-.faq-item { background: #fff; border: 1px solid #dadce0; border-radius: 12px; overflow: hidden; }
+.faq-item { background: #fff; border: 1px solid #e4d9fb; border-radius: 12px; overflow: hidden; }
 .faq-question { width: 100%; text-align: left; background: none; border: none; padding: 14px; font-size: 13px; font-weight: 600; color: #202124; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
 .faq-icon { transition: transform 0.3s ease; color: #5f6368; }
 .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out, padding 0.3s ease; background: #f8f9fa; }
@@ -527,7 +527,7 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
 /* Ultra-Premium AQI Hero Card Styling */
 .aqi-premium-hero {
     background: linear-gradient(145deg, #ffffff, #f8f9fa);
-    border: 1px solid #dadce0;
+    border: 1px solid #e4d9fb;
     border-radius: 16px;
     padding: 24px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.03);
@@ -543,7 +543,7 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #1a73e8;
+    color: #7c3aed;
     margin-bottom: 15px;
     font-weight: 600;
 }
@@ -572,8 +572,8 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
     padding: 0 10px;
 }
 .us-aqi-pill {
-    background: #e8f0fe;
-    color: #1a73e8;
+    background: #f1e9fe;
+    color: #7c3aed;
     padding: 2px 8px;
     border-radius: 10px;
     font-weight: 600;
@@ -618,7 +618,7 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
 /* Nearby Cities Section */
 .nearby-city-link {
   background: #f1f3f4;
-  color: #1a73e8;
+  color: #7c3aed;
   padding: 6px 12px;
   border-radius: 16px;
   font-size: 13px;
@@ -628,5 +628,140 @@ body { background-color: #f4f6f9; color: #202124; padding: 12px 12px 80px 12px; 
 }
 
 .nearby-city-link:hover {
-  background: #e8f0fe;
+  background: #f1e9fe;
 }
+
+/* =========================================================
+   PREMIUM THEME LAYER v2 — Colorful Modern (Bold Gradients)
+   ========================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --brand-1: #7c3aed;
+  --brand-2: #ec4899;
+  --brand-3: #f59e0b;
+  --grad-hero: linear-gradient(135deg, #6d28d9 0%, #a855f7 45%, #ec4899 100%);
+  --grad-btn: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+  --grad-warm: linear-gradient(135deg, #f59e0b 0%, #ec4899 100%);
+  --grad-cool: linear-gradient(135deg, #06b6d4 0%, #7c3aed 100%);
+  --grad-fresh: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+  --card-shadow: 0 10px 30px -8px rgba(124,58,237,0.18), 0 2px 6px rgba(0,0,0,0.04);
+  --card-shadow-hover: 0 16px 40px -8px rgba(124,58,237,0.28), 0 4px 10px rgba(0,0,0,0.06);
+}
+
+* { font-family: 'Inter', 'Segoe UI', sans-serif; }
+h1, h2, h3, h4, .brand-text, .temp-value, .aqi-big-num, .gauge-center-text h1 { font-family: 'Poppins', sans-serif; }
+
+body {
+  background:
+    radial-gradient(circle at 8% 8%, rgba(124,58,237,0.10) 0%, transparent 40%),
+    radial-gradient(circle at 92% 15%, rgba(236,72,153,0.10) 0%, transparent 40%),
+    radial-gradient(circle at 50% 95%, rgba(245,158,11,0.08) 0%, transparent 45%),
+    #f8f6fd;
+  min-height: 100vh;
+}
+
+/* Header & branding */
+.brand-text { background: var(--grad-btn); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 800; letter-spacing: -0.3px; }
+.icon-btn { color: #6d28d9; background: #ffffff; box-shadow: 0 2px 8px rgba(124,58,237,0.12); }
+.icon-btn:hover { background: #f1e9fe; transform: translateY(-1px); }
+
+/* Search bar */
+.search-input-wrap { border: 1.5px solid #ecdffc; border-radius: 16px; box-shadow: 0 4px 14px rgba(124,58,237,0.08); }
+.search-input-wrap:focus-within { border-color: #a855f7; box-shadow: 0 4px 18px rgba(124,58,237,0.18); }
+.orange-search-btn { background: var(--grad-btn); border-radius: 16px; box-shadow: 0 6px 16px rgba(236,72,153,0.35); border: none; transition: transform 0.15s, box-shadow 0.15s; }
+.orange-search-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(236,72,153,0.45); }
+.orange-search-btn:active { transform: translateY(0); }
+
+/* Tabs */
+.nav-tabs-container { border: none; border-radius: 18px; background: #ffffff; box-shadow: var(--card-shadow); padding: 6px; }
+.tab-btn { border-radius: 12px; color: #6b5b8a; font-weight: 600; transition: all 0.2s; }
+.tab-btn.active { background: var(--grad-btn); color: #fff; box-shadow: 0 6px 14px rgba(124,58,237,0.35); }
+
+/* Hero weather card */
+.weather-hero-card { border-radius: 26px; box-shadow: var(--card-shadow-hover); }
+.weather-content { background: var(--grad-hero) !important; position: relative; overflow: hidden; }
+.weather-content::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 85% -10%, rgba(255,255,255,0.25) 0%, transparent 55%);
+  pointer-events: none;
+}
+.weather-stats-grid { background: rgba(30, 10, 60, 0.55) !important; backdrop-filter: blur(6px); }
+.stat-item i { color: #fbcfe8 !important; }
+
+/* Generic cards -> glassy premium look */
+.compact-aqi-card, .smart-advice-card, .hourly-forecast-card, .daily-card,
+.aqi-hero-card, .hero-gauge-side, .hero-pollutants-side, .premium-card {
+  border: none !important;
+  border-radius: 22px !important;
+  box-shadow: var(--card-shadow) !important;
+  background: #ffffff !important;
+  transition: box-shadow 0.25s, transform 0.25s;
+}
+.compact-aqi-card:hover, .daily-card:hover { box-shadow: var(--card-shadow-hover) !important; }
+
+/* Section titles get gradient accent bar */
+.section-title, .advice-header h3, .side-title {
+  position: relative;
+}
+.section-title::before, .advice-header h3::before {
+  content: ''; display: none;
+}
+
+/* Icons in circular badges get gradient tint backgrounds via inline styles already; add glow */
+.c-aqi-icon, .d-item i { box-shadow: 0 4px 10px rgba(124,58,237,0.12); }
+
+/* Advice list items — gradient left borders already inline; add card lift */
+.advice-list li { border-radius: 14px !important; transition: transform 0.2s; background: linear-gradient(180deg,#faf8ff,#f6f1fd) !important; }
+.advice-list li:hover { transform: translateX(3px); }
+
+/* Hourly cards */
+.h-card { background: linear-gradient(180deg,#faf8ff,#f3edfd) !important; border: 1px solid #ecdffc !important; border-radius: 16px !important; }
+.h-tab-btn.active { background: var(--grad-btn) !important; color: #fff !important; border-color: transparent !important; }
+
+/* AQI Gauge accents */
+.aqi-status-badge.good { background: linear-gradient(135deg,#d1fae5,#a7f3d0); color: #047857; }
+.aqi-status-badge.moderate { background: linear-gradient(135deg,#fef3c7,#fde68a); color: #b45309; }
+.aqi-status-badge.unhealthy { background: linear-gradient(135deg,#fee2e2,#fecaca); color: #b91c1c; }
+
+/* Bottom nav */
+.bottom-nav { border: none; box-shadow: 0 -6px 20px rgba(124,58,237,0.10); border-radius: 22px 22px 0 0; }
+.b-nav-item.active { color: #7c3aed; }
+.b-nav-item.active i { background: var(--grad-btn); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+/* Buttons generic */
+button, .btn { transition: transform 0.15s; }
+
+/* Suggestions dropdown */
+.suggestions-box { border: none; box-shadow: var(--card-shadow-hover); }
+.suggestion-item:hover { background: #f6f1fd; }
+
+/* Footer links hover */
+.site-footer a:hover { color: #7c3aed !important; }
+
+/* New: premium badge / pill utility */
+.premium-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--grad-btn); color: #fff; font-weight: 700;
+  font-size: 11px; padding: 4px 10px; border-radius: 999px;
+  box-shadow: 0 4px 10px rgba(124,58,237,0.3);
+}
+
+/* New: feature card grid (moon/pollen/visibility widgets) */
+.mini-feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
+@media (min-width: 640px) { .mini-feature-grid { grid-template-columns: repeat(4, 1fr); } }
+.mini-feature-card {
+  background: #ffffff; border-radius: 18px; padding: 14px; text-align: center;
+  box-shadow: var(--card-shadow);
+}
+.mini-feature-card i { font-size: 20px; margin-bottom: 6px; background: var(--grad-btn); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.mini-feature-card .mf-label { font-size: 11px; color: #8b7aa8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+.mini-feature-card .mf-value { font-size: 15px; font-weight: 800; color: #2d1b4e; margin-top: 2px; }
+
+/* Scrollbars */
+::-webkit-scrollbar { height: 6px; width: 6px; }
+::-webkit-scrollbar-thumb { background: #d9c6fb; border-radius: 4px; }
+
+/* Smooth entrance */
+.main-container > * { animation: fadeUp 0.4s ease both; }
+@keyframes fadeUp { from { opacity:0; transform: translateY(6px);} to { opacity:1; transform: translateY(0);} }

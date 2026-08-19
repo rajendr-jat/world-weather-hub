@@ -133,6 +133,43 @@ function renderHome(data, aqiData, cityName, card, hourlySection, aqiSection, ad
             `;
         }
 
+        // 3.5 MINI FEATURE GRID: Moon Phase, Pollen, Visibility, Pressure (all free data)
+        const miniGrid = document.getElementById('miniFeatureGrid');
+        if (miniGrid) {
+            const moon = getMoonPhase();
+            const visKm = cur.visibility ? (cur.visibility / 1000).toFixed(1) : '--';
+            const pressure = cur.pressure_msl ? Math.round(cur.pressure_msl) : '--';
+            let pollenHtml = '';
+            if (aqiData && aqiData.current && (aqiData.current.grass_pollen !== undefined)) {
+                const grassLvl = getPollenLevel(aqiData.current.grass_pollen);
+                pollenHtml = `
+                <div class="mini-feature-card">
+                    <i class="fa-solid fa-seedling"></i>
+                    <div class="mf-label">Pollen</div>
+                    <div class="mf-value" style="color:${grassLvl.color}">${grassLvl.text}</div>
+                </div>`;
+            }
+            miniGrid.style.display = 'grid';
+            miniGrid.innerHTML = `
+                <div class="mini-feature-card">
+                    <i class="fa-solid ${moon.icon}"></i>
+                    <div class="mf-label">Moon Phase</div>
+                    <div class="mf-value">${moon.name}</div>
+                </div>
+                <div class="mini-feature-card">
+                    <i class="fa-solid fa-eye"></i>
+                    <div class="mf-label">Visibility</div>
+                    <div class="mf-value">${visKm} km</div>
+                </div>
+                <div class="mini-feature-card">
+                    <i class="fa-solid fa-gauge"></i>
+                    <div class="mf-label">Pressure</div>
+                    <div class="mf-value">${pressure} hPa</div>
+                </div>
+                ${pollenHtml}
+            `;
+        }
+
         // 4. SMART HUB ADVICE LOGIC
         if (adviceSection) {
             adviceSection.style.display = 'block';
@@ -308,6 +345,13 @@ function generateSmartAdvice(weatherData, aqiData) {
     if (cur.wind_speed_10m > 25) {
         advices.push({ icon: 'fa-wind text-secondary', text: `It's quite windy (${Math.round(cur.wind_speed_10m)} km/h). Secure loose objects on your balcony.`, color: '#9aa0a6' });
     }
+    // 5.5 Pollen Advice (free Open-Meteo data)
+    if (aqiData && aqiData.current && aqiData.current.grass_pollen !== undefined) {
+        const grassLvl = getPollenLevel(aqiData.current.grass_pollen);
+        if (grassLvl.text === 'High' || grassLvl.text === 'Very High') {
+            advices.push({ icon: 'fa-seedling text-warning', text: `Pollen levels are ${grassLvl.text.toLowerCase()} today. Allergy sufferers should limit time outdoors.`, color: '#ec4899' });
+        }
+    }
     // 6. General Weather Fallback (To make sure we always have ~5 advices)
     if (cur.cloud_cover > 80 && advices.length < 5) {
         advices.push({ icon: 'fa-cloud text-secondary', text: "It's mostly cloudy. Good weather for a cozy indoor day or reading a book.", color: '#9aa0a6' });
@@ -317,7 +361,7 @@ function generateSmartAdvice(weatherData, aqiData) {
     }
 
     // Top 5 Advices Render Karein
-    const finalAdvices = advices.slice(0, 5);
+    const finalAdvices = advices.slice(0, 6);
     adviceList.innerHTML = finalAdvices.map(item => `
         <li style="border-left-color: ${item.color}">
             <i class="fa-solid ${item.icon}" style="color: ${item.color};"></i>

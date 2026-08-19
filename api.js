@@ -90,7 +90,7 @@ function getLat() { return ACTIVE_CITY ? ACTIVE_CITY.lat : 28.6139; }
 function getLon() { return ACTIVE_CITY ? ACTIVE_CITY.lon : 77.2090; }
 
 async function getWeatherData(lat = getLat(), lon = getLon()) {
-    const url = `${WEATHER_API}?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,cloud_cover,wind_speed_10m&hourly=temperature_2m,weather_code,precipitation_probability,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_sum,precipitation_probability_max,wind_speed_10m_max,wind_direction_10m_dominant,shortwave_radiation_sum&timezone=auto&forecast_days=16`;
+    const url = `${WEATHER_API}?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,cloud_cover,wind_speed_10m,visibility,pressure_msl&hourly=temperature_2m,weather_code,precipitation_probability,wind_speed_10m,visibility&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_sum,precipitation_probability_max,wind_speed_10m_max,wind_direction_10m_dominant,shortwave_radiation_sum&timezone=auto&forecast_days=16`;
     try {
         const response = await fetchWithTimeout(url, 6000);
         if (!response.ok) throw new Error("Network response was not ok");
@@ -99,12 +99,45 @@ async function getWeatherData(lat = getLat(), lon = getLon()) {
 }
 
 async function getAirQualityData(lat = getLat(), lon = getLon()) {
-    const url = `${AQI_API}?latitude=${lat}&longitude=${lon}&current=us_aqi,pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone&hourly=us_aqi&timezone=auto&forecast_days=3`;
+    const url = `${AQI_API}?latitude=${lat}&longitude=${lon}&current=us_aqi,pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone,birch_pollen,grass_pollen,ragweed_pollen&hourly=us_aqi&timezone=auto&forecast_days=3`;
     try {
         const response = await fetchWithTimeout(url, 6000);
         if (!response.ok) throw new Error("Network response was not ok");
         return await response.json();
     } catch (error) { return null; }
+}
+
+// === MOON PHASE (calculated client-side, zero API cost) ===
+function getMoonPhase(date = new Date()) {
+    // Reference new moon: Jan 6, 2000 18:14 UTC
+    const knownNewMoon = Date.UTC(2000, 0, 6, 18, 14);
+    const synodicMonth = 29.530588853; // days
+    const diffDays = (date.getTime() - knownNewMoon) / 86400000;
+    let phase = (diffDays % synodicMonth) / synodicMonth;
+    if (phase < 0) phase += 1;
+
+    const phases = [
+        { max: 0.03, name: "New Moon", icon: "fa-circle" },
+        { max: 0.22, name: "Waxing Crescent", icon: "fa-moon" },
+        { max: 0.28, name: "First Quarter", icon: "fa-circle-half-stroke" },
+        { max: 0.47, name: "Waxing Gibbous", icon: "fa-moon" },
+        { max: 0.53, name: "Full Moon", icon: "fa-circle-notch" },
+        { max: 0.72, name: "Waning Gibbous", icon: "fa-moon" },
+        { max: 0.78, name: "Last Quarter", icon: "fa-circle-half-stroke" },
+        { max: 0.97, name: "Waning Crescent", icon: "fa-moon" },
+        { max: 1.01, name: "New Moon", icon: "fa-circle" }
+    ];
+    const match = phases.find(p => phase <= p.max) || phases[0];
+    const illumination = Math.round((1 - Math.cos(2 * Math.PI * phase)) / 2 * 100);
+    return { name: match.name, icon: match.icon, illumination };
+}
+
+function getPollenLevel(value) {
+    if (value === null || value === undefined) return { text: "N/A", color: "#9aa0a6" };
+    if (value < 20) return { text: "Low", color: "#10b981" };
+    if (value < 50) return { text: "Moderate", color: "#f59e0b" };
+    if (value < 100) return { text: "High", color: "#ec4899" };
+    return { text: "Very High", color: "#b91c1c" };
 }
 
 function getWeatherIcon(code, isDay = 1) {

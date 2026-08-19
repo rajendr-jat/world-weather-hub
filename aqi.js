@@ -86,6 +86,21 @@ async function initAqi() {
                 { name: "CO", val: coVal, unit: "µg/m³", desc: "Carbon monoxide from incomplete fossil fuel combustion.", s: getAqiStatus(coVal / 2) }
             ];
 
+            // Pollen (free Open-Meteo data) — shown only if available for this location
+            if (cur.grass_pollen !== undefined && cur.grass_pollen !== null) {
+                const pollenTypes = [
+                    { name: "Grass Pollen", val: cur.grass_pollen, key: 'grass' },
+                    { name: "Birch Pollen", val: cur.birch_pollen, key: 'birch' },
+                    { name: "Ragweed Pollen", val: cur.ragweed_pollen, key: 'ragweed' }
+                ];
+                pollenTypes.forEach(pt => {
+                    if (pt.val !== undefined && pt.val !== null) {
+                        const lvl = getPollenLevel(pt.val);
+                        pollutants.push({ name: pt.name, val: Math.round(pt.val), unit: "gr/m³", desc: "Airborne allergen concentration affecting seasonal allergy sufferers.", s: { text: lvl.text, class: lvl.text === 'Low' ? 'good' : (lvl.text === 'Moderate' ? 'moderate' : 'unhealthy') } });
+                    }
+                });
+            }
+
             pGrid.innerHTML = pollutants.map(p => `
                 <div class="pollutant-row">
                     <div class="pollutant-info">
